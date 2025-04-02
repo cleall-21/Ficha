@@ -64,15 +64,15 @@
     <div id="container">
         <main>
             <div class="resultados">
-                <form method="post" id="sucursalForm" class="form2" >
+                <form method="post" id="sucursalForm" class="form2">
                     {% csrf_token %}
                     <div class="input">
                         <label for="{{ form.cui.id_for_label }}">Código Oficina:</label>
                         {{ form.cui }}
                     </div>
                     <div class="input">
-                        <label for="{{ form.rut.id_for_label }}">RUT:</label>
-                        {{ form.rut }}
+                        <label for="{{ form.nombre_ejecutivo.id_for_label }}">Nombre ejecutivo:</label>
+                        {{ form.nombre_ejecutivo }}
                     </div>
                     <div class="botones">
                         <button type="submit" class="button">Consultar</button>
@@ -82,7 +82,7 @@
                 <div id="resul">
                     {% include 'web/resultados.html' %}
                 </div>
-            </div>
+            </div>            
         </main>
         {% block contenido %}
         {% endblock contenido %}

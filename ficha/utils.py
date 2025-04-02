@@ -1,4 +1,3 @@
-# utils.py
 from .forms import SucursalForm
 from .models import Registro_materialidad
 
@@ -7,11 +6,12 @@ def filtro_form(request):
     form = SucursalForm(request.POST or None)
     if form.is_valid():
         cui = form.cleaned_data['cui']
-        rut = form.cleaned_data.get('rut')
+        nombre_ejecutivo = form.cleaned_data.get('nombre_ejecutivo')
         filtros = Registro_materialidad.objects.filter(cui=cui)
-        if rut:
-            filtros = filtros.filter(rut=rut)
+        if nombre_ejecutivo:
+            filtros = filtros.filter(nombre_ejecutivo=nombre_ejecutivo)
     return form, filtros
+
 
 
 #   class evaluacion_cliente(APIView):

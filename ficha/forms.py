@@ -3,9 +3,9 @@ from .models import Registro_materialidad
 
 class SucursalForm(forms.Form):
     cui = forms.IntegerField(label='Código Oficina:')
-    rut = forms.ModelChoiceField(
+    nombre_ejecutivo = forms.ModelChoiceField(
         queryset=Registro_materialidad.objects.none(),  # Inicialmente vacío
-        label='RUT Cliente',
+        label='Nombre Ejecutivo',
         required=False
     )
 
@@ -14,9 +14,9 @@ class SucursalForm(forms.Form):
         if 'cui' in self.data:
             try:
                 cui = int(self.data.get('cui'))
-                self.fields['rut'].queryset = Registro_materialidad.objects.filter(cui=cui)
+                self.fields['nombre_ejecutivo'].queryset = Registro_materialidad.objects.filter(cui=cui).values_list('nombre_ejecutivo', flat=True).distinct()
             except (ValueError, TypeError):
                 pass  # Manejar el caso en que cui no sea un entero válido
         elif self.initial.get('cui'):
             cui = self.initial.get('cui')
-            self.fields['rut'].queryset = Registro_materialidad.objects.filter(cui=cui)
+            self.fields['nombre_ejecutivo'].queryset = Registro_materialidad.objects.filter(cui=cui).values_list('nombre_ejecutivo', flat=True).distinct()
