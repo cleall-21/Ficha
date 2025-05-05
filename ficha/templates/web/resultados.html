@@ -3,14 +3,16 @@
     <ul>
         {% for filtro in filtros %}
         <li>
-            Rut: {{ filtro.rut }}<br>
-            Ejecutivo: {{ filtro.nombre_creador }}<br>
-            Login Creador: {{ filtro.login_creador }}<br>
+            Rut: {{ filtro.rut }}-{{filtro.dv}}<br>
+            Fecha: {{ filtro.log_fecha_registro }}<br>
+            Ejecutivo: {{ filtro.nombre_ejecutivo }}<br>
+            Login Ejecutivo: {{ filtro.login_creador }}<br>
             Oficina Ejecutivo: {{ filtro.oficina_ejecutivo }}<br>
             Sucursal: {{ filtro.nombre_suc }}<br>
             Producto Evaluado: {{ filtro.prod_eval }}<br>
             Monto Oferta: ${{ filtro.monto_oferta }}<br>
-            Número de Oportunidad: {{ filtro.n_oportunidad }}<br>
+            Proceso credito: {{filtro.proceso_credito}}<br>
+            Estado: {{filtro.estado}}<br>
         </li>
         {% endfor %}
     </ul>

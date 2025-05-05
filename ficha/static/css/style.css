@@ -1,244 +1,109 @@
-body {
-  background-color: #f0f0f0;
-  background-image: url('img/fondo.jpg');
-  background-position: center;
-  background-attachment: fixed;
-  background-size: cover;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  font-size: 1rem;
-  line-height: 1.5;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-
-.capa {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-/* Estilos para el encabezado */
-.header {
-  width: 100%;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Distribuir espacio entre elementos */
-  padding: 10px;
-  background-color: rgb(6, 22, 100);
-  box-shadow: 0 3px 5px rgb(8, 8, 17);
-}
-
-#logo {
-  height: 70px;
-  margin-top: 10px;
-}
-
-/* Estilos para el botón del menú */
-.container .btn-menu {
-  float: left;
-  line-height: 1px;
-}
-
-.container .btn-menu label {
-  color: #fff;
-  font-size: 30px;
-  cursor: pointer;
-  margin-left: 15px;
-}
-/* Menú lateral */
-#btn-menu {
-  display: none;
-}
-
-.container-menu {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  transition: all 300ms ease;
-  opacity: 0;
-  visibility: hidden;
-}
-
-#btn-menu:checked ~ .container-menu {
-  opacity: 1;
-  visibility: visible;
-}
-
-.cont-menu {
-  width: 100%;
-  max-width: 300px;
-  background-color: #132669;
-  height: 100vh;
-  position: relative;
-  transition: all 300ms ease;
-  transform: translateX(-100%);
-}
-
-#btn-menu:checked ~ .container-menu .cont-menu {
-  transform: translateX(0%);
-}
-
-.cont-menu nav {
-  transform: translateY(15%);
-}
-
-.cont-menu nav a {
+/* Estilo Modificacion de evaluaciones */
+main {
   display: block;
-  text-decoration: none;
+  position: relative;
+  background-color: #fff;
+  width: 50%;
+  max-width: 800px;
+  margin: 20px auto;
   padding: 20px;
-  color: #fff;
-  border-left: 5px solid transparent;
-  transition: all 400ms ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-.cont-menu nav a:hover {
-  border-left: 5px solid #97A9B8;
-  background: #494D5A;
-  text-transform: uppercase;
+form p {
+  background-color: #f0f0f0; /* Color de fondo más claro y moderno */
+  width: 100%; /* Ancho completo para mejor visualización */
+  max-width: 600px; /* Limitar el ancho máximo */
+  margin: 10px auto; /* Centrar el párrafo */
+  padding: 15px; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  font-family: 'Arial', sans-serif; /* Fuente moderna */
+  font-size: 18px; /* Tamaño de fuente adecuado */
+  color: #040404; /* Color de texto */
+  transition: background-color 0.3s ease; /* Transición suave */
 }
-
-.cont-menu label {
-  position: absolute;
-  right: 5px;
-  top: 10px;
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
+p input, label, select {
+  width: 100%; /* Ancho completo para mejor visualización */
+  max-width: 300px; /* Limitar el ancho máximo */
+  height: 36px; /* Ajuste de altura */
+  padding: 10px; /* Espaciado interno */
+  margin: 10px auto; /* Centrar el párrafo */
+  font-size: 14px; /* Tamaño de fuente adecuado */
+  border-radius: 5px; /* Bordes redondeados */
+  box-sizing: border-box; /* Ajuste de box-sizing */
 }
-
-/* Estilos para la foto del usuario */
-.user-photo {
-  width: 70px; /* Ajustar tamaño de la foto */
-  height: 70px;
-  border-radius: 50%; /* Hacer la foto circular */
-  object-fit: cover;
+  
+form p:hover {
+  background-color: #e0e0e0; /* Cambio de color al pasar el cursor */
 }
-
-/* Contenedor del usuario */
-.container-user {
-  display: flex; /* Usar flexbox para alinear elementos */
-  align-items: center;
-  color: white;
-  padding-right: 10px; /* Espacio a la derecha */
-}
-
-/* Estilos para el icono de usuario */
-.container-user .fa-user {
-  color: white;
-  border-right: 1px solid rgb(157, 154, 172);
-  text-decoration: none;
-}
-.circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: grey; /* Color por defecto */
-  margin-left: 1px;
+  
+#update {
   display: flex;
-  position: absolute; /* Posición absoluta para el menú desplegable */
-  z-index: 1; /* Asegurarse de que el menú desplegable esté por encima de otros elementos */
-  right: 0; /* Alinear el menú desplegable hacia la izquierda */
-  transform: translateX(-200%); /* Desplazar el menú hacia la izquierda */
-  top: 60px; /* Ajustar la posición vertical para que quede más arriba */
+  justify-content: space-around; /* Espaciado entre botones */
+  width: 100%; /* Ancho completo */
+  max-width: 260px; /* Limitar el ancho máximo */
+  margin: 10px auto; /* Centrar el contenedor de botones */
+  background-color: darkblue;
+  color: white;
+  font-size: 18px;
+  padding: 12px 30px; /* Ajuste de padding */
+  border-radius: 25px; /* Bordes más redondeados */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave y efecto de transformación */
 }
-
-.active {
-  background-color: rgb(38, 226, 38); /* Color para usuario activo */
+#revisado {
+  display: flex;
+  justify-content: space-around; /* Espaciado entre botones */
+  width: 100%; /* Ancho completo */
+  max-width: 260px; /* Limitar el ancho máximo */
+  margin: 10px auto; /* Centrar el contenedor de botones */
+  background-color: rgb(30, 204, 7);
+  color: rgb(33, 14, 14);
+  font-size: 18px;
+  padding: 12px 30px; /* Ajuste de padding */
+  border-radius: 25px; /* Bordes más redondeados */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave y efecto de transformación */
 }
-
-.inactive {
-  background-color: rgb(204, 10, 10); /* Color para usuario inactivo */
+#delete {
+  display: flex;
+  justify-content: space-around; /* Espaciado entre botones */
+  width: 100%; /* Ancho completo */
+  max-width: 260px; /* Limitar el ancho máximo */
+  margin: 10px auto; /* Centrar el contenedor de botones */
+  background-color: rgb(169, 0, 0);
+  color: white;
+  font-size: 18px;
+  padding: 12px 30px; /* Ajuste de padding */
+  border-radius: 25px; /* Bordes más redondeados */
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave y efecto de transformación */
 }
-
+button:hover {
+  transform: scale(1.05); /* Efecto de escala al pasar el cursor */
+}
+  
 /* Estilos responsivos */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column; /* Cambiar a columna en pantallas más pequeñas */
-    align-items: flex-start; /* Alinear elementos al inicio */
+@media (max-width: 500px) {
+  main {
+    width: 95%;
+    padding: 15px;
   }
 
-  .container-user {
-    justify-content: center; /* Centrar en pantallas más pequeñas */
-    padding-right: 0;
-    margin-top: 10px; /* Añadir margen superior */
+  form p {
+    max-width: 90%; /* Ajuste para pantallas pequeñas */
+
   }
 
-  .container-user .fa-user {
-    font-size: 1.5rem; /* Ajustar tamaño del icono */
-    padding-right: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
-    align-items: flex-start; /* Alinear elementos al inicio */
+  p input, label, select {
+    max-width: 90%; /* Ajuste para pantallas pequeñas */
   }
 
-  .container-user {
-    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
-    align-items: center;
-    margin-top: 10px; /* Añadir margen superior */
+  button {
+    padding: 8px 20px; /* Ajuste de padding para pantallas pequeñas */
   }
-
-  .container-user .fa-user {
-    font-size: 1.2rem; /* Ajustar tamaño del icono */
-    padding-right: 0;
-    margin-bottom: 10px; /* Espacio entre icono y foto */
-  }
-}
-.paste-button .button {
-  color: white; /* Color del texto del botón */
-  padding: 1px; /* Espaciado interno del botón */
-  cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
-  border-radius: 10px; /* Bordes redondeados */
-}
-
-.dropdown-content {
-  display: none; /* Ocultar el contenido del menú desplegable por defecto */
-  position: absolute; /* Posición absoluta para el menú desplegable */
-  background-color: #f9f9f9; /* Color de fondo del menú desplegable */
-  min-width: 160px; /* Ancho mínimo del menú desplegable */
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Sombra del menú desplegable */
-  z-index: 1; /* Asegurarse de que el menú desplegable esté por encima de otros elementos */
-  border-radius: 10px; /* Bordes redondeados */
-  right: 0; /* Alinear el menú desplegable hacia la izquierda */
-  transform: translateX(-45%); /* Desplazar el menú hacia la izquierda */
-  top: 18px; /* Ajustar la posición vertical para que quede más arriba */
-}
-
-.dropdown-content a {
-  color: black; /* Color del texto de los enlaces */
-  padding: 12px 16px; /* Espaciado interno de los enlaces */
-  text-decoration: none; /* Sin subrayado */
-  display: block; /* Mostrar los enlaces como bloques */
-  border-bottom: 1px solid #ddd; /* Línea divisoria entre enlaces */
-}
-
-.dropdown-content a:hover {
-  background-color: #afababe7; /* Color de fondo al pasar el cursor sobre los enlaces */
-}
-
-.paste-button:hover .dropdown-content {
-  display: block; /* Mostrar el contenido del menú desplegable al pasar el cursor sobre el botón */
-}
-
-
-.dropdown-content a:hover {
-  border-radius: 10px;
-  background-color: #afababe7; /* Color de fondo al pasar el cursor sobre los enlaces */
-}
-
-.paste-button:hover .dropdown-content {
-  display: block; /* Mostrar el contenido del menú desplegable al pasar el cursor sobre el botón */
 }

@@ -1,0 +1,41 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% block estilos %}
+  <link rel="stylesheet" href="{% static 'css/listar_eva.css' %}">
+{% endblock estilos %}
+{% block contenido %}
+
+<h1>Evaluación Ejecutivos</h1>
+<h2>Pilar Formalidad</h2>
+
+<ul>
+  {% for evaluacion in evaluaciones %}
+  <li>
+    <a href="{% url 'detalle_eva' evaluacion.id_formalidad %}">
+      <strong>Numero de Evaluacion: </strong> 
+      <p>{{ evaluacion.id_formalidad }}</p>
+      <strong>Verificación Laboral: </strong> 
+      <p>{{ evaluacion.respuesta_verificacion_laboral }}</p>
+      <strong>Tipo de error: </strong> 
+      <p>{{ evaluacion.tipo_error_verificacion_laboral }}</p>
+      <strong>Observaciones: </strong>
+      <p>{{ evaluacion.observacion_verificacion }}</p>
+      <strong>Estado de Situación: </strong> 
+      <p>{{ evaluacion.respuesta_estado_situacion }}</p>
+      <strong>Tipo de error: </strong> 
+      <p>{{ evaluacion.tipo_error_estado_situacion }}</p>
+      <strong>Observaciones: </strong>
+      <p>{{ evaluacion.observacion_estado }}</p>
+      <strong>Acreditación Ingresos: </strong> 
+      <p>{{ evaluacion.respuesta_acreditacion_ingresos }}</p>
+      <strong>Tipo de error: </strong> 
+      <p>{{ evaluacion.tipo_error_acreditacion_ingresos }}</p>
+      <strong>Observaciones: </strong>
+      <p>{{ evaluacion.observacion_acreditacion }}</p>
+      <p><strong>Evaluador:</strong> {{ evaluacion.evaluador }}</p>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock contenido %}

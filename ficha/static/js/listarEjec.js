@@ -53,5 +53,3 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error al inicializar el gráfico:", error);
     }
 });
-
-

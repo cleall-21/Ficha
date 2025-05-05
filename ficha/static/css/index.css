@@ -1,0 +1,268 @@
+
+/* Contenedor Principal */
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+  width: 100%;
+  margin: 10px;
+}
+
+/* Sección Central */
+.evaluacion_section {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+.form_evaluacion {
+  display: flex;
+  flex-direction: column;
+}
+
+.forms_title {
+  text-align: center;
+  color: #132669;
+  font-size: 20px;
+}
+.nav_pilares{
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.nav_pilares select {
+  width: 35%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+
+}
+.select_forms h3{
+  color: black;
+  font-size: 23px;
+  text-transform: uppercase;
+}
+
+.select_forms label{
+  color: #132669;
+  font-size: 20px;
+  font-weight: bold;
+}
+/* estilo tipo cliente */
+.tipoCliente select{
+  width: 33%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #ddd;
+}
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputs select,
+.inputs input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.top-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 30px;
+  margin-top: 10px;
+}
+.section button {
+  display: grid;
+  place-items: center;
+  margin-top: 15px;
+  padding: 12px 26px;
+  background-color: #0d887e;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.section button:hover {
+  background-color: #21b7c2;
+}
+.top-buttons button {
+  padding: 10px 30px;
+  background-color: #132669;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+/* Estilos Busqueda de oportunidad de negocio */
+.resultados {
+  margin-left: 10px;
+  width: auto;
+  height: auto;
+  background: whitesmoke;
+  border-radius: 20px;
+  box-shadow: 0 6px 8px rgb(0, 0, 0);
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.form2 {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.input {
+  margin-bottom: 15px;
+}
+
+.input label {
+  width: 90%;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.input select {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.botones {
+  display: flex;
+  justify-content: space-between;
+}
+
+.botones .button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: rgb(6, 22, 100);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.resultados h2 {
+  padding: 5px;
+  text-align: left;
+  font-size: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.resultados ul {
+  align-content: flex-start;
+  padding: 10px;
+  text-align: left;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.resultados li {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resultados li:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.resultados li p {
+  margin: 5px 0;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .resultados {
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+  }
+
+  .resultados h2 {
+    font-size: 24px;
+  }
+
+  .resultados ul {
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 5px;
+  }
+
+  .resultados {
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+  }
+
+  .resultados h2 {
+    font-size: 20px;
+  }
+
+  .resultados ul {
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+    padding: 8px;
+  }
+}

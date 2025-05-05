@@ -1,0 +1,101 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el título */
+    position: relative;
+    background-color: #fff;
+    width: 90%;
+    max-width: 1200px;
+    height: auto;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+h2{
+    align-self: flex-start; /* Mueve el botón al final del contenedor padre */
+}  
+.form {
+    display: block; 
+    flex-direction: column; /* Alinea los elementos en columna */
+    width: 100%; /* Ancho completo */
+}
+.form div {
+    flex-direction: wrap; /* Alinea los elementos en fila */
+    align-self: flex-start; /* Espaciado entre elementos */
+    background-color: #f0f0f0; /* Color de fondo más claro y moderno */
+    margin-bottom: 15px; /* Espaciado entre filas */
+    width: 100%; /* Ancho completo para mejor visualización */
+    max-width: 600px; /* Limitar el ancho máximo */
+    margin: 10px auto; /* Centrar el párrafo */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+    font-family: 'Arial', sans-serif; /* Fuente moderna */
+    font-size: 18px; /* Tamaño de fuente adecuado */
+    color: #040404; /* Color de texto */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+div label, select {
+    width: 100%; /* Ancho completo para mejor visualización */
+    max-width: 300px; /* Limitar el ancho máximo */
+    height: 36px; /* Ajuste de altura */
+    padding: 10px; /* Espaciado interno */
+    margin: 10px auto; /* Centrar el párrafo */
+    font-size: 16px; /* Tamaño de fuente adecuado */
+    border-radius: 5px; /* Bordes redondeados */
+    box-sizing: border-box; /* Ajuste de box-sizing */
+}
+div input{
+    width: 100%; /* Ancho completo para mejor visualización */
+    max-width: 300px; /* Limitar el ancho máximo */
+    height: 36px; /* Ajuste de altura */
+    padding: 10px; /* Espaciado interno */
+    margin: 10px auto; /* Centrar el párrafo */
+    font-size: 16px; /* Tamaño de fuente adecuado */
+    border-radius: 5px; /* Bordes redondeados */
+    box-sizing: border-box; /* Ajuste de box-sizing */
+}
+  
+.button {
+    display: flex;
+    justify-content: space-around; /* Espaciado entre botones */
+    width: 100%; /* Ancho completo */
+    max-width: 260px; /* Limitar el ancho máximo */
+    margin: 10px auto; /* Centrar el contenedor de botones */
+    background-color: darkblue;
+    color: white;
+    font-size: 18px;
+    padding: 12px 30px; /* Ajuste de padding */
+    border-radius: 25px; /* Bordes más redondeados */
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave y efecto de transformación */
+  }
+
+.button:hover {
+    background-color: navy;
+    transform: scale(1.05); /* Efecto de escala al pasar el cursor */
+}
+  
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    main {
+      width: 95%;
+      padding: 15px;
+    }
+  
+    .form {
+      gap: 10px;
+    }
+  
+    .form > div {
+      flex-direction: column; /* Alinea verticalmente en pantallas pequeñas */
+      gap: 10px; /* Espaciado entre elementos en pantallas pequeñas */
+    }
+  
+    button {
+      padding: 8px 20px; /* Ajuste de padding para pantallas pequeñas */
+    }
+}
+  

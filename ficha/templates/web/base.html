@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 {% load static %}
+{% block estilos %}
+{% endblock estilos %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    {% block estilos %}
-    {% endblock estilos %}
+  
     <title>BancoChile</title>
 </head>
 <body>
@@ -24,7 +24,7 @@
         <div class="container-user">
             <div class="paste-button">
                 {% if user.is_authenticated %}
-                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo" >
+                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo">
                     <div id="user-status" class="circle"></div> <!-- Círculo de estado -->
                 {% else %}
                     <button class="button fa-solid fa-user"></button>
@@ -48,47 +48,21 @@
                 <a href="{% url 'index' %}">Evaluacion Ejecutivos</a>
                 <a href="{% url 'Listado' %}">Listado Ejecutivos</a>
                 <a href="{% url 'Reporte' %}">Reporte Sucursal</a>
-                <a href="#">Revision At Sucursal</a>
+                <a href="{% url 'list_form' %}">Listado Evaluaciones</a>
             </nav>
             <label for="btn-menu">✖️</label>
         </div>
     </div>
     <div class="capa"></div>
-    <div class="tarjeta">
-        <h3>Calificación / Estado de Carpeta</h3>
-        {% if success %}
-            <div class="alert">{{ success }}</div>
-        {% endif %}
-        <div class="resultado">Excelente</div>
-    </div>
     <div id="container">
         <main>
-            <div class="resultados">
-                <form method="post" id="sucursalForm" class="form2">
-                    {% csrf_token %}
-                    <div class="input">
-                        <label for="{{ form.cui.id_for_label }}">Código Oficina:</label>
-                        {{ form.cui }}
-                    </div>
-                    <div class="input">
-                        <label for="{{ form.nombre_ejecutivo.id_for_label }}">Nombre ejecutivo:</label>
-                        {{ form.nombre_ejecutivo }}
-                    </div>
-                    <div class="botones">
-                        <button type="submit" class="button">Consultar</button>
-                        <button type="reset" class="button" id="limpiarBtn">Limpiar</button>
-                    </div>
-                </form>
-                <div id="resul">
-                    {% include 'web/resultados.html' %}
-                </div>
-            </div>            
+            {% block contenido %}
+            {% endblock contenido %}
         </main>
-        {% block contenido %}
-        {% endblock contenido %}
-    {% block js %}
-        <script src="{% static 'js/acciones.js' %}"></script>
-        <script src="{% static 'js/navPilares.js' %}"></script>
-    {% endblock js %}
+    </div>
+    <footer>
+        <p>© 2025 Mi Aplicación</p>
+    </footer>
+    <script src="{% static 'js/acciones.js' %}"></script>
 </body>
 </html>

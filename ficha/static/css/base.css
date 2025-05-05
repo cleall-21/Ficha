@@ -1,3 +1,250 @@
+body {
+  background-image: url('../img/fondo.jpg');
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+  width: 100%;
+  margin: 10px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  color: #fff;
+  padding: 10px; 
+  background-color: #343743b1;
+}
+.capa {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Estilos para el encabezado */
+.header {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distribuir espacio entre elementos */
+  padding: 10px;
+  background-color: rgb(6, 22, 100);
+  box-shadow: 0 3px 5px rgb(8, 8, 17);
+}
+
+#logo {
+  height: 70px;
+  margin-top: 10px;
+}
+/* Estilos para la foto del usuario */
+.user-photo {
+  width: 70px; /* Ajustar tamaño de la foto */
+  height: 70px;
+  border-radius: 50%; /* Hacer la foto circular */
+  object-fit: cover;
+}
+
+/* Contenedor del usuario */
+.container-user {
+  display: flex; /* Usar flexbox para alinear elementos */
+  align-items: center;
+  color: white;
+  padding-right: 10px; /* Espacio a la derecha */
+}
+
+/* Estilos para el icono de usuario */
+.container-user .fa-user {
+  color: white;
+  border-right: 1px solid rgb(157, 154, 172);
+  text-decoration: none;
+}
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: grey; /* Color por defecto */
+  margin-left: 1px;
+  display: flex;
+  position: absolute; /* Posición absoluta para el menú desplegable */
+  z-index: 1; /* Asegurarse de que el menú desplegable esté por encima de otros elementos */
+  right: 0; /* Alinear el menú desplegable hacia la izquierda */
+  transform: translateX(-200%); /* Desplazar el menú hacia la izquierda */
+  top: 60px; /* Ajustar la posición vertical para que quede más arriba */
+}
+.active {
+  background-color: rgb(38, 226, 38); /* Color para usuario activo */
+}
+.inactive {
+  background-color: rgb(204, 10, 10); /* Color para usuario inactivo */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column; /* Cambiar a columna en pantallas más pequeñas */
+    align-items: flex-start; /* Alinear elementos al inicio */
+  }
+
+  .container-user {
+    justify-content: center; /* Centrar en pantallas más pequeñas */
+    padding-right: 0;
+    margin-top: 10px; /* Añadir margen superior */
+  }
+
+  .container-user .fa-user {
+    font-size: 1.5rem; /* Ajustar tamaño del icono */
+    padding-right: 0.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
+    align-items: flex-start; /* Alinear elementos al inicio */
+  }
+
+  .container-user {
+    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
+    align-items: center;
+    margin-top: 10px; /* Añadir margen superior */
+  }
+
+  .container-user .fa-user {
+    font-size: 1.2rem; /* Ajustar tamaño del icono */
+    padding-right: 0;
+    margin-bottom: 10px; /* Espacio entre icono y foto */
+  }
+}
+.paste-button .button {
+  color: white; /* Color del texto del botón */
+  padding: 1px; /* Espaciado interno del botón */
+  cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
+  border-radius: 10px; /* Bordes redondeados */
+}
+.dropdown-content {
+  display: none; /* Ocultar el contenido del menú desplegable por defecto */
+  position: absolute; /* Posición absoluta para el menú desplegable */
+  background-color: #f9f9f9; /* Color de fondo del menú desplegable */
+  min-width: 160px; /* Ancho mínimo del menú desplegable */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Sombra del menú desplegable */
+  z-index: 1; /* Asegurarse de que el menú desplegable esté por encima de otros elementos */
+  border-radius: 10px; /* Bordes redondeados */
+  right: 0; /* Alinear el menú desplegable hacia la izquierda */
+  transform: translateX(-45%); /* Desplazar el menú hacia la izquierda */
+  top: 18px; /* Ajustar la posición vertical para que quede más arriba */
+}
+.dropdown-content a {
+  color: black; /* Color del texto de los enlaces */
+  padding: 12px 16px; /* Espaciado interno de los enlaces */
+  text-decoration: none; /* Sin subrayado */
+  display: block; /* Mostrar los enlaces como bloques */
+  border-bottom: 1px solid #ddd; /* Línea divisoria entre enlaces */
+}
+.dropdown-content a:hover {
+  background-color: #afababe7; /* Color de fondo al pasar el cursor sobre los enlaces */
+}
+.paste-button:hover .dropdown-content {
+  display: block; /* Mostrar el contenido del menú desplegable al pasar el cursor sobre el botón */
+}
+.dropdown-content a:hover {
+  border-radius: 10px;
+  background-color: #afababe7; /* Color de fondo al pasar el cursor sobre los enlaces */
+}
+.paste-button:hover .dropdown-content {
+  display: block; /* Mostrar el contenido del menú desplegable al pasar el cursor sobre el botón */
+}
+/* Estilos para el botón del menú lateral*/
+.container .btn-menu {
+  float: left;
+  line-height: 1px;
+}
+
+.container .btn-menu label {
+  color: #fff;
+  font-size: 30px;
+  cursor: pointer;
+  margin-left: 15px;
+}
+/* Menú lateral */
+#btn-menu {
+  display: none;
+}
+
+.container-menu {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  transition: all 300ms ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#btn-menu:checked ~ .container-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cont-menu {
+  width: 100%;
+  max-width: 300px;
+  background-color: #132669;
+  height: 100vh;
+  position: relative;
+  transition: all 300ms ease;
+  transform: translateX(-100%);
+}
+
+#btn-menu:checked ~ .container-menu .cont-menu {
+  transform: translateX(0%);
+}
+
+.cont-menu nav {
+  transform: translateY(15%);
+}
+
+.cont-menu nav a {
+  display: block;
+  text-decoration: none;
+  padding: 20px;
+  color: #fff;
+  border-left: 5px solid transparent;
+  transition: all 400ms ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cont-menu nav a:hover {
+  border-left: 5px solid #97A9B8;
+  background: #494D5A;
+  text-transform: uppercase;
+}
+
+.cont-menu label {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+}
 /* Botones Principales */
 .tarjeta {
   display: flex;
@@ -32,261 +279,4 @@
   color: whitesmoke;
   background-color: #5c5959;
   border-color: rgb(40, 116, 238);
-}
-
-/* Contenedor Principal */
-#container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 10px;
-  width: 100%;
-  margin: 10px;
-}
-
-/* Sección Central */
-.evaluacion_section {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-}
-
-.form_evaluacion {
-  display: flex;
-  flex-direction: column;
-}
-
-.forms_title {
-  text-align: center;
-  color: #132669;
-  font-size: 20px;
-}
-.nav_pilares{
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-}
-.nav_pilares select {
-  width: 40%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-.select_forms h3{
-  color: black;
-  font-size: 23px;
-  text-transform: uppercase;
-}
-
-.select_forms label{
-  color: #132669;
-  font-size: 20px;
-  font-weight: bold;
-}
-.inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.inputs select,
-.inputs input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.top-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-  background-color: #f9f9f9;
-  border-radius: 30px;
-  margin-top: 10px;
-}
-.section button{
-  align-content: space-between;
-  margin-top: 10px;
-  padding: 8px 20px;
-  background-color: #0d887e;
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-  font-size: 15px;
-}
-.section button:hover {
-  background-color: #21b7c2;
-}
-.top-buttons button {
-  padding: 10px 30px;
-  background-color: #132669;
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-  font-size: 17px;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-/* Estilos columna izquierda */
-.resultados {
-  margin-left: 10px;
-  width: auto;
-  height: auto;
-  background: whitesmoke;
-  border-radius: 20px;
-  box-shadow: 0 6px 8px rgb(0, 0, 0);
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.form2 {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.input {
-  margin-bottom: 15px;
-}
-
-.input label {
-  width: 90%;
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.input input {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.input select {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.botones {
-  display: flex;
-  justify-content: space-between;
-}
-
-.botones .button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background-color: rgb(6, 22, 100);
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-.resultados h2 {
-  padding: 5px;
-  text-align: left;
-  font-size: 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.resultados ul {
-  align-content: flex-start;
-  padding: 10px;
-  text-align: left;
-  font-size: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.resultados li {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.resultados li:hover {
-  background-color: #f1f1f1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.resultados li p {
-  margin: 5px 0;
-}
-
-/* Estilos responsivos */
-@media (max-width: 768px) {
-  .resultados {
-    width: 100%;
-    margin-left: 0;
-    height: auto;
-  }
-
-  .resultados h2 {
-    font-size: 24px;
-  }
-
-  .resultados ul {
-    font-size: 16px;
-  }
-
-  button {
-    width: 100%;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  form {
-    padding: 5px;
-  }
-
-  .resultados {
-    width: 100%;
-    margin-left: 0;
-    height: auto;
-  }
-
-  .resultados h2 {
-    font-size: 20px;
-  }
-
-  .resultados ul {
-    font-size: 14px;
-  }
-
-  button {
-    width: 100%;
-    padding: 8px;
-  }
 }

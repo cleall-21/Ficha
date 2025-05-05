@@ -1,17 +1,64 @@
 {% extends "web/base.html" %}
 {% load static %}
 {% include 'web/resultados.html' %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock estilos %}
+
 {% block contenido %}
+<div class="capa"></div>
+<div class="tarjeta">
+    <h3>Calificación / Estado de Carpeta</h3>
+    <div class="resultado">Excelente</div>
+</div>
+<div id="container">
+    <main>
+        <div class="resultados">
+            <form method="POST" id="sucursalForm" class="form2" >
+                {% csrf_token %}
+                <label for="fechaInicio">Fecha Inicio:</label>
+                <input type="date" id="fechaInicio" name="fechaInicio">
+                <label for="fechaFin">Fecha Fin:</label>
+                <input type="date" id="fechaFin" name="fechaFin">
+                <div class="input">
+                    <label for="{{ form.codigo_suc.id_for_label }}">Código Oficina:</label>
+                    {{ form.codigo_suc }}
+                </div>
+                <div class="input">
+                    <label for="{{ form.nombre_ejecutivo.id_for_label }}">RUT:</label>
+                    {{ form.nombre_ejecutivo }}
+                </div>
+                <div class="botones">
+                    <button type="submit" class="button">Buscar Oportunidad</button>
+                    <button type="reset" class="button" id="limpiarBtn">Limpiar</button>
+                </div>
+            </form>
+            <div id="resul">
+                {% include 'web/resultados.html' %}
+            </div>
+        </div>
+    </main>
 <section class="evaluacion_section">
-    <form class="form_evaluacion" method="POST" >
+    <form action="/index/" class="form_evaluacion" method="POST" >
         {% csrf_token %}
         <div class="forms_title">
             <h1> Evaluación Ejecutivo </h1>
         </div>
+         <!-- Tipo de Cliente -->
+    <div class="tipoCliente">
+        <select id="tipoClienteSelect" name="tipoCliente">
+            <option value="">Seleccione Un Tipo De Cliente</option>
+            <option value="prospecto">Prospecto</option>
+            <option value="nuevo">Nuevo</option>
+            <option value="antiguo">Antiguo</option>
+            <option value="plus">Plus</option>
+        </select>
+    </div>
         <div class="formulario_input">
             <div class="nav_pilares">
                 <select id="pilar_select" name="pilares" onchange="mostrarPilares()">
-                    <option style="display:none;">Seleccione una opcion</option>
+                    <option style="display:none;">Seleccione Un Pilar</option>
                     <option value="formalidad">Formalidad</option>
                     <option value="gestion_otorga">Gestión Otorgamiento</option>
                     <option value="depuracon_antece">Depuración de Antecedentes</option>
@@ -73,10 +120,10 @@
                             </select>
                             <input type="text" name="observacion_acredita" placeholder="Observaciones">
                         </div>
-                        <button type="button" class="tablinks" onclick="validateSection1(event)">Siguiente</button>
+                        <button type="button" class="tablinks" onclick="validateSection1(event)">Siguiente Pilar</button>
+                        <button type="submit" class="button">Guardar</button>
                     </div>
                 </div>
-                
                 <!------ Formulario pilar gestión de otorgamiento ------------------------------------>
                 <div id="formGestion_otorga" class="componente-form" style="display:none;">
                     <div id="section2" class="section">
@@ -150,8 +197,8 @@
                                 </select>
                                 <input type="text" name="observacion_res_deuda_vincu" placeholder="Observaciones">                                                  
                             </div>
-                            <button type="button" onclick="goBack('section1')">Atrás</button>
-                            <button type="button" class="tablinks" onclick="validateSection2(event)">Siguiente</button>
+                            <button type="button" onclick="goBack('section1')">Pilar Anterior</button>
+                            <button type="button" class="tablinks" onclick="validateSection2(event)">Siguiente Pilar</button>
                         </div>
                     </div>
                 </div>
@@ -317,8 +364,8 @@
                                 <input type="text" name="obs_Monto_compraSBIF" placeholder="Debe Decir (m$)" > 
                                 <input type="text" name="obs_Monto_compraSBIF" placeholder="Observaciones">
                         </div>
-                        <button type="button" onclick="goBack('section2')">Atrás</button>
-                        <button type="button" class="tablinks3" onclick="validateSection3()">Siguiente</button>
+                        <button type="button" onclick="goBack('section2')">Pilar Anterior</button>
+                        <button type="button" class="tablinks3" onclick="validateSection3()">Siguiente Pilar</button>
                     </div>
                 </div>
                 <!------ Formulario pilar ingreso de datos ----------------------------->
@@ -457,21 +504,18 @@
                             <input type="text" name="obs_Estado_civil" placeholder="Debe Decir "> 
                             <input type="text" name="obs_Estado_civil" placeholder="Observaciones">
                         </div>
-                        <button type="button" onclick="goBack('section3')">Atrás</button>
-                        <button type="button" class="tablinks4" onclick="validateSection4()">Siguiente</button>
+                        <button type="button" onclick="goBack('section3')">Pilar Anterior</button>
                     </div>
-                </div>
+                    <div class="top-buttons">
+                        <button type="reset" class="button">Limpiar</button>
+                        <button type="submit" class="button">Guardar</button>
+                    </div>
+                </div>    
             </div>
-        </div>
-        <div class="top-buttons">
-            <button type="reset" class="button">Limpiar</button>
-            <button type="submit" class="button">Archivar</button>
         </div>
     </form>
 </section>
-{% endblock contenido %}
-
 {% block js %}
 <script src="{% static 'js/formalidad.js' %}"></script>
-<script src="{% static 'js/acciones.js' %}"></script>
 {% endblock js %}
+{% endblock contenido %}

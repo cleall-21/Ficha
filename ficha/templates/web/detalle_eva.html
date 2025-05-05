@@ -1,0 +1,24 @@
+{% extends 'web/base.html' %}
+
+{% block contenido %}
+<h1>Detalles de Evaluación</h1>
+
+{{ error }}
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button id='update' type="submit">Actualizar</button>
+</form>
+
+<form action="{% url 'complete_evaluacion' eva.id_formalidad %}" method="POST">
+  {% csrf_token %}
+  <button id='revisado'type="submit">Revisado</button>
+</form>
+
+<form action="{% url 'delete_evaluacion' eva.id_formalidad %}" method="POST">
+  {% csrf_token %}
+  <button id='delete' type="submit">Eliminar</button>
+</form>
+
+{% endblock %}

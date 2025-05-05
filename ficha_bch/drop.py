@@ -12,3 +12,5 @@ conn.commit()
 conn.close()
 
 print("Tabla eliminada exitosamente.")
+
+

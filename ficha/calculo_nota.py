@@ -1,8 +1,8 @@
-from .models import ErrorAgravante, Cliente
+from .models import Errores_agravante
 
 def calcular_nota(parametro):
     tipo_cliente = parametro.cliente.tipo_cliente
-    errores_agravantes = ErrorAgravante.objects.filter(parametro=parametro)
+    errores_agravantes = Errores_agravante.objects.filter(parametro=parametro)
     
     notas = []
     if errores_agravantes.exists():
@@ -24,7 +24,7 @@ def calcular_nota(parametro):
     
     nota_final = max(1, min(5, nota_final))
     
-    error_agravante, created = ErrorAgravante.objects.get_or_create(
+    error_agravante, created = Errores_agravante.objects.get_or_create(
         tipo_error='Resultado nota final',
         defaults={'nota': nota_final}
     )

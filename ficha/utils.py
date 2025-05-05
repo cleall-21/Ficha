@@ -5,14 +5,12 @@ def filtro_form(request):
     filtros = None
     form = SucursalForm(request.POST or None)
     if form.is_valid():
-        cui = form.cleaned_data['cui']
+        codigo_suc = form.cleaned_data['codigo_suc']
         nombre_ejecutivo = form.cleaned_data.get('nombre_ejecutivo')
-        filtros = Registro_materialidad.objects.filter(cui=cui)
+        filtros = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
         if nombre_ejecutivo:
             filtros = filtros.filter(nombre_ejecutivo=nombre_ejecutivo)
     return form, filtros
-
-
 
 #   class evaluacion_cliente(APIView):
 #       def post(self, request, *args, **kwargs):

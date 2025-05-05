@@ -1,0 +1,20 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block contenido %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/form_formalidad.css' %}">
+{% endblock estilos %}
+
+<h1>Crear Evaluacion</h1>
+<h2>Pilar Formalidad</h2>
+
+
+{{error}}
+<form action="/form_formalidad/" class="form" method="POST">
+  {% csrf_token %}
+  {{form_evaluacion}}
+
+  <button type="submit" class="button">Guardar</button>
+</form>
+{% endblock %}
