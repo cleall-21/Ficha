@@ -5,7 +5,7 @@ conn = sqlite3.connect('db.sqlite3')
 cursor = conn.cursor()
 
 # Eliminar la tabla
-cursor.execute('DROP TABLE IF EXISTS ficha_Registro_materialidad')
+cursor.execute('DROP TABLE IF EXISTS ficha_Evaluacion')
 
 # Confirmar los cambios y cerrar la conexión
 conn.commit()

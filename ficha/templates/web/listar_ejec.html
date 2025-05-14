@@ -1,154 +1,146 @@
 {% extends "web/base.html" %}
 {% load static %}
-    {% block estilos %}
-    <head>
+
+{% block estilos %}
     <link rel="stylesheet" href="{% static 'css/listarEjec.css' %}">
-    </head>
-    {% endblock estilos %}
-    {% block contenido %}    
-    <div class="capa"></div>
-           <!--Contnedor Pricipal-->
-           <div class="container"></div>
-           <!--Filtro de Sucursal-->
-           <div class="filter-section">
-                   <h2 class="center-title">Resultados de Evaluación por Ejecutivo</h2>
-             <div class="filter">
-                  <label for="sucursal-filter"> Número de Sucursal:</label>
-                  <input type="text" id="sucursal-filter" placeholder="N° Sucursal">
-                  <button id="filter-button">Filtrar</button>
-             </div>
-           </div>
-           <!--Sección tabla de Ejecutivos-->
-                <div class="table-section">
-                   <table class="executives-table" id="executives-table">
-                    <thead> 
-                     <tr> 
-                        <th> Ejecutivo Evaluado</th>
-                        <th> Deficiente</th>
-                        <th> Insuficiente</th>
-                        <th> Regular</th>
-                        <th> Aceptable</th>
-                        <th> Destacado</th>
-                        <th> Excelente</th>
-                        <th> N° Casos Revisados</th>   
-                        <th>Calificación Final</th>         
-                     </tr>
-                     </thead>
-                     <tbody id="tabla-ejecutivo">
-                        <tr dta-sucursal="102">
-                               <td>Zumaran Vera Isabel Ivelina</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>5</td>
-                                    <td>Excelente</td>
-                        </tr>
-                            <tr data-sucursal="102"> 
-                                <td> Ossandon Ortiz David Elías</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>1</td>
-                                    <td>4</td>
-                                    <td>5</td>
-                                    <td>Excelente</td>
-                        </tr>
-                            <tr data-sucursal="103"> 
-                                <td> Ramiréz Paredes Blanca Suzy</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>3</td>
-                                    <td>2</td>
-                                    <td>5</td>
-                                    <td>Destacado</td>
-                        </tr>
-                            <tr data-sucursal="103"> 
-                                <td> Henríquez Bugueño Christian Augusto</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>5</td>
-                                    <td>Excelente</td>
-                        </tr>
-                            <tr>
-                                 <td><strong> TOTAL</strong></td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>8</td>
-                                    <td>12</td>
-                                    <td>20</td>
-                                    <td>Excelente</td>
-                            </tr>                        
-                     </tbody>
-                </table>
-           </div>
-           
-           <!--contenedor2-->
-           <div class="container"></div>
-           <!--Filtro de Sucursal-->
-           <div class="filter-section">
-                   <h2 class="center-title">Detalle de Observaciones Relevantes</h2>
-             <div class="filter">
-                  <label for="sucursal-filter"> N° de Rut:</label>
-                  <input type="text" id="sucursal-filter" placeholder="Ingrese Rut">
-                  <button id="filter-button">Buscar</button>
-             </div>
-           </div>      
-                             
-           
-           <!--Sección de Observaciones Relevantes-->
-           <div class="Observations-section">
-                <table class="obsevation-table">
-                <thead> 
+ {% endblock estilos %}
+
+{% block contenido %}
+    <!--Contnedor Pricipal-->
+    <div class="container">
+        <!--Filtro de Sucursal-->
+        <div class="filter-section">
+                <h2 class="center-title">Resultados de Evaluación por Ejecutivo</h2>
+            <div class="filter">
+                <label for="sucursal-filter"> Número de Sucursal:</label>
+                <input type="text" id="sucursal-filter" placeholder="N° Sucursal">
+                <button id="filter-button">Filtrar</button>
+            </div>
+        </div>
+        <!--Sección tabla de Ejecutivos-->
+        <div class="table-section">
+            <table class="executives-table" id="executives-table">
+                <thead>
+                    <tr>
+                    <th> Ejecutivo Evaluado</th>
+                    <th> Deficiente</th>
+                    <th> Insuficiente</th>
+                    <th> Regular</th>
+                    <th> Aceptable</th>
+                    <th> Destacado</th>
+                    <th> Excelente</th>
+                    <th> N° Casos Revisados</th>
+                    <th>Calificación Final</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-ejecutivo">
+                    <tr dta-sucursal="102">
+                        <td>Zumaran Vera Isabel Ivelina</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>5</td>
+                        <td>Excelente</td>
+                    </tr>
+                    <tr data-sucursal="102">
+                        <td> Ossandon Ortiz David Elías</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>Excelente</td>
+                    </tr>
+                    <tr data-sucursal="103">
+                        <td> Ramiréz Paredes Blanca Suzy</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>3</td>
+                            <td>2</td>
+                            <td>5</td>
+                            <td>Destacado</td>
+                    </tr>
+                    <tr data-sucursal="103">
+                        <td> Henríquez Bugueño Christian Augusto</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>5</td>
+                            <td>Excelente</td>
+                    </tr>
+                    <tr>
+                        <td><strong> TOTAL</strong></td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>8</td>
+                        <td>12</td>
+                        <td>20</td>
+                        <td>Excelente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--Filtro ejecutivos-->
+        <div class="filter-section">
+                <h2 class="center-title">Detalle de Observaciones Relevantes</h2>
+            <div class="filter">
+                <label for="sucursal-filter"> N° de Rut:</label>
+                <input type="text" id="ejecutivo-filter" placeholder="Ingrese Rut">
+                <button id="filter-button">Buscar</button>
+            </div>
+        </div>
+        <!--Sección de Observaciones Relevantes-->
+        <div class="observations-section">
+            <table class="obs-table" id="obs-table">
+                <thead>
                     <tr>
                         <th> Clientes</th>
                         <th> Item</th>
                         <th> Concepto</th>
                         <th> Observaciones</th>
                         <th> Tipo Cliente</th>
-                        <th> Tipo Eval</th>
+                        <th> Tipo Evaluación</th>
                     </tr>
                 </thead>
                 <tbody id="observations-body">
                     <!-- Este cuerpo sera llenado dinámicamente con javascript-->
-                     <tr>
+                    <tr>
                         <td>190190405-5 Lin/Cta/</td>
                         <td>Ingreso de Datos</td>
                         <td>Profesión</td>
-                        <td>Ejecutiva ingresa como profesión del cliente
-                         " Otra Profesión", se debió ingresas "Ing. Ejec. En Administración"</td>
-                         <td>Prospecto</td>
-                         <td>Normal</td>
-                     </tr>
-                     <tr>
+                        <td>Ejecutiva ingresa como profesión del cliente " Otra Profesión", se debió ingresas "Ing. Ejec. En Administración"</td>
+                        <td>Prospecto</td>
+                        <td>Normal</td>
+                    </tr>
+                    <tr>
                         <td>190190405-3 Cred/</td>
                         <td>Ingreso de Datos</td>
                         <td>Profesión</td>
-                        <td>Ejecutiva ingresa como profesión del Cliente 
-                            "Otra Profesión", se debió ingresar "Ing.Ejec. En administración"</td>
+                        <td>Ejecutiva ingresa como profesión del Cliente "Otra Profesión", se debió ingresar "Ing.Ejec. En administración"</td>
                         <td>Plus</td>
                         <td>3S</td>
-                     </tr>
+                    </tr>
                 </tbody>
-         </table>            
-     </div>          
-  </div>
-     <!--Gráfico de calificaciones-->
-     <section class="chart-section">
-        <h2>Distribución de Calificaciones por Operación</h2>
-        <canvas id="pieChart" width="400" height="400"></canvas>
-    </section>
+            </table>
+        </div>
+        <!--Gráfico de calificaciones-->
+        <section class="chart-section">
+            <h2>Distribución de Calificaciones </h2>
+            <canvas id="pieChart" width="400" height="400"></canvas>
+        </section>
+    </div>
     {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'js/listarEjec.js'%}"></script>

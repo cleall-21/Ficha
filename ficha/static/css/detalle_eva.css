@@ -1,0 +1,156 @@
+.contenedor{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+/* Títulos */
+h2 {
+    text-align: center;
+    color: #132669;
+}
+/*Estilos Formulario de evaluacion*/
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: none;
+    background: #f5f7fa;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Ítems de pestaña */
+.nav-tabs .nav-item {
+    list-style: none;
+}
+
+/* Enlaces de pestaña */
+.nav-tabs .nav-link {
+    display: block;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #333;
+    background: #e9ecf3;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+/* Hover */
+.nav-tabs .nav-link:hover {
+    background-color: #d0d4e0;
+    color: #000;
+}
+
+/* Activa */
+.nav-tabs .nav-link.active {
+    background-color: #132669;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenido de pestañas */
+.tab-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-in-out;
+    margin-bottom: 10px;
+}
+
+/* Paneles individuales */
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: block;
+    background-color: #ffff;
+}
+.tab-pane label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    background-color: #f0f2f8;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para select e input */
+.tab-pane select,
+.tab-pane input {
+    width: 98%;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d4e8;
+    border-radius: 10px;
+    background-color: #f9faff;
+    color: #2c3e50;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Efecto al enfocar */
+.tab-pane select:focus,
+.tab-pane input:focus {
+    outline: none;
+    border-color: #4a6ee0;
+    box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.2);
+    background-color: #ffffff;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+button[class="btn_update"] {
+    display: block;
+    align-items: flex-end;
+    width: 70%;
+    padding: 10px;
+    margin: 0 auto 3px auto;
+    background-color: darkblue;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[class="btn_update"]:hover {
+    background-color: #0577e1;
+}
+
+button[class="btn_delete"] {
+    display: block;
+    width: 70%;
+    padding: 10px;
+    margin: 0 auto;
+    background-color: rgb(148, 3, 3);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[class="btn_delete"]:hover {
+    background-color: #f32222;
+}

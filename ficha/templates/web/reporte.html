@@ -1,79 +1,49 @@
 {% extends "web/base.html" %}
 {% load static %}
-    {% block estilos %}
-    <head>
-        <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
-    </head>
-    {% endblock estilos %}
-{% block contenido %}   
-    <main class="contenedor">
-        <!--sección de Datos de la sucursal-->
-        <div class="datos-sucursal">
-            <h2>Reporte sucursal Copiapó</h2>
-            <p><strong>Gerente Área:</strong> Ignacio Ernesto Chavarría Bustos</p>
-            <p><strong>Gerente Zonal:</strong> Rodrigo Javier Bahamonde Reihbein</p>
-            <p><strong>Gerente Sucursal:</strong> Marcelo Rodrigo Schmeiler Garcia</p>
-            <p><strong>Tipo de Informe:</strong> Eval. Normal/Normal S Rev. Automática</p>
-        </div>
 
-        <!--Sección de Evaluación-->
-        <div class="evaluacion">
-            <h2>Datos de Evaluación</h2>
-            <p><strong>N° Ejecutivos Evaluados en Revisión:</strong> 4 Ejecutivos</p>
-            <p><strong>Periodo de la Mustra Revisión Validador:</strong> Noviembre y Diciembre 2024</p>
-            <p><strong>Cobertura Validación / Documentación:</strong> Casos -20.2% Montos</p>
-            <p><strong>N° ejecutivos Evaluados en Revisión Automática:</strong> Toda la Sucursal</p>
-            <p><strong>Cobertura de revisión automática Ultimos 6 meses:</strong> 100% Casos</p>
-        </div>
+{% block estilos %}
+    <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
+{% endblock estilos %}
 
-        <!--Seccion de Resultados-->
-        <div class="resultados">
-            <h2>BANCA COMERCIAL BANCO CHILE</h2>
-            <p>La calidad del proceso de Otorgamiento de la Muestra revisada en la sucursal es de nivel <strong>Excelente</strong></p>
+{% block contenido %}
+<div class="container">
+    <!-- Datos de la sucursal -->
+    <div class="datos-sucursal">
+        <h2>Reporte sucursal Copiapó</h2>
+        <p><strong>Gerente Área:</strong> Juan Pérez</p>
+        <p><strong>Gerente Zonal:</strong> María González</p>
+        <p><strong>Gerente Sucursal:</strong> Luis Ramírez</p>
+        <p><strong>Tipo de Informe:</strong> Evaluación Trimestral</p>
+    </div>
 
-            <ul>
-                <li>
-                    <strong>Formalidad:</strong>
-                    <input type="text" placeholder="Ingrese observaciones sobre Formalidad">
-                </li>
-                <li>
-                    <strong>Gestión de Otorgamiento:</strong>
-                    <input type="text" placeholder="Ingrese observaciones sobre Gestión de Otorgamiento">
-                </li>
-                <li>
-                    <strong>Depuración de Antecedentes:</strong>
-                    <input type="text" placeholder="Ingrese observaciones sobre Depuración de Antecedentes">
-                </li>
-                <li>
-                    <strong>Ingreso de Datos:</strong>
-                    <input type="text" placeholder="Ingrese observaciones sobre Ingreso de Datos">
-                </li>
-                <li>
-                    <strong>Revisiones Automáticas:</strong>
-                    <input type="text" placeholder="Ingrese observaciones sobre Revisiones Automáticas">
-                </li>
-            </ul>
-        </div>
+    <!-- Evaluación -->
+    <div class="evaluacion">
+        <h2>Datos de Evaluación</h2>
+        <p><strong>N° Ejecutivos Evaluados en Revisión:</strong> 4 Ejecutivos</p>
+        <p><strong>Periodo de la Muestra Revisión Validador:</strong> Noviembre y Diciembre 2024</p>
+        <p><strong>Cobertura Validación / Documentación:</strong> Casos -20.2% Montos</p>
+        <p><strong>N° Ejecutivos Evaluados en Revisión Automática:</strong> Toda la Sucursal</p>
+        <p><strong>Cobertura de revisión automática últimos 6 meses:</strong> 100% Casos</p>
+    </div>
 
-        <!--Seccion de Calificaciones-->
-        <div class="calificaciones">
-            <div class="etiqueta">
-                <button class="button">Excelente</button>
-                <span class="etiqueta-texto">Calificación Informe de Validación/Documentación</span>
-            </div>
-            <div class="etiqueta">
-                <button class="button">Excelente</button>
-                <span class="etiqueta-texto">Calificación Informe de Revisión Automática</span>
-            </div>
-            <div class="etiqueta">
-                <button class="button">Excelente</button>
-                <span class="etiqueta-texto">Calificación Final</span>
-            </div>
-        </div>
+    <!-- Resultados -->
+    <div class="resultados">
+        <h2>Banca Comercial Banco Chile</h2>
+        <p>La calidad del proceso de Otorgamiento de la muestra revisada en la sucursal es de nivel <strong>Excelente</strong>.</p>
+        <ul>
+            <li><strong>Formalidad:</strong> Cumplimiento total de protocolos.</li>
+            <li><strong>Gestión de Otorgamiento:</strong> Coordinación efectiva entre áreas.</li>
+            <li><strong>Depuración de Antecedentes:</strong> Documentación completa y actualizada.</li>
+            <li><strong>Ingreso de Datos:</strong> Precisión en los registros.</li>
+            <li><strong>Revisiones Automáticas:</strong> Sin observaciones.</li>
+        </ul>
+    </div>
 
-        <!--Sección de Botón para Imprimir-->
-        <div class="print-section">
-            <button onclick="window.print()">Imprimir en PDF</button>
-        </div>
-    </main>
+    <!-- Calificaciones -->
+    <div class="calificaciones">
+        <p><strong>Calificación Informe de Validación/Documentación:</strong> Excelente</p>
+        <p><strong>Calificación Informe de Revisión Automática:</strong> Excelente</p>
+        <p><strong>Calificación Final:</strong> Excelente</p>
+    </div>
+</div>
 {% endblock contenido %}

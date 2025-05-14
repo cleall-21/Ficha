@@ -1,268 +1,268 @@
-
-/* Contenedor Principal */
-#container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 10px;
-  width: 100%;
-  margin: 10px;
-}
-
-/* Sección Central */
-.evaluacion_section {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-}
-
-.form_evaluacion {
-  display: flex;
-  flex-direction: column;
-}
-
-.forms_title {
-  text-align: center;
-  color: #132669;
-  font-size: 20px;
-}
-.nav_pilares{
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-}
-.nav_pilares select {
-  width: 35%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-
-}
-.select_forms h3{
-  color: black;
-  font-size: 23px;
-  text-transform: uppercase;
-}
-
-.select_forms label{
-  color: #132669;
-  font-size: 20px;
-  font-weight: bold;
-}
-/* estilo tipo cliente */
-.tipoCliente select{
-  width: 33%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: #ddd;
-}
-.inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.inputs select,
-.inputs input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.top-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-  background-color: #f9f9f9;
-  border-radius: 30px;
-  margin-top: 10px;
-}
-.section button {
-  display: grid;
-  place-items: center;
-  margin-top: 15px;
-  padding: 12px 26px;
-  background-color: #0d887e;
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-  font-size: 20px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-}
-.section button:hover {
-  background-color: #21b7c2;
-}
-.top-buttons button {
-  padding: 10px 30px;
-  background-color: #132669;
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-  font-size: 17px;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-/* Estilos Busqueda de oportunidad de negocio */
-.resultados {
-  margin-left: 10px;
-  width: auto;
-  height: auto;
-  background: whitesmoke;
-  border-radius: 20px;
-  box-shadow: 0 6px 8px rgb(0, 0, 0);
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.form2 {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.input {
-  margin-bottom: 15px;
-}
-
-.input label {
-  width: 90%;
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.input input {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.input select {
-  width: 90%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.botones {
-  display: flex;
-  justify-content: space-between;
-}
-
-.botones .button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background-color: rgb(6, 22, 100);
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-
-.resultados h2 {
-  padding: 5px;
-  text-align: left;
-  font-size: 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.resultados ul {
-  align-content: flex-start;
-  padding: 10px;
-  text-align: left;
-  font-size: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.resultados li {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.resultados li:hover {
-  background-color: #f1f1f1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.resultados li p {
-  margin: 5px 0;
-}
-
-/* Estilos responsivos */
-@media (max-width: 768px) {
-  .resultados {
-    width: 100%;
-    margin-left: 0;
-    height: auto;
-  }
-
-  .resultados h2 {
-    font-size: 24px;
-  }
-
-  .resultados ul {
-    font-size: 16px;
-  }
-
-  button {
-    width: 100%;
+/* Contenedor principal */
+.evaluacion {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
     padding: 10px;
-  }
+    flex-wrap: nowrap;
+    max-width: 1440px;
+    width: 100%;
+    height: 100%;
 }
 
-@media (max-width: 480px) {
-  form {
-    padding: 5px;
-  }
+/* Bloques hijos */
+.resultados {
+    flex: 1 1 30%;
+    min-width: 280px;
+    background: linear-gradient(135deg, #f0f4ff, #ffffff);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  .resultados {
-    width: 100%;
-    margin-left: 0;
-    height: auto;
-  }
+.container {
+    flex: 1 1 70%;
+    min-width: 280px;
+    background: linear-gradient(135deg, #f0f4ff, #ffffff);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  .resultados h2 {
-    font-size: 20px;
-  }
+/* Títulos */
+h2 {
+    text-align: center;
+    color: #132669;
+}
 
-  .resultados ul {
+/*Estilos Busqueda de oportunidad*/
+.resultados label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.resultados input {
+    margin-top: 8px;
+    padding: 12px 16px;
+    border: 2px solid #d0d0e1;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.resultados input:focus {
+    border-color: #132669;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(19, 38, 105, 0.1);
+}
+
+.resultados input:hover {
+    border-color: #1e3c72;
+}
+/*Estilos botones busqueda*/
+.botones {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
     font-size: 14px;
-  }
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+}
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-  button {
+.buscar {
+    background: linear-gradient(135deg, #132669, #1e3c72);
+    color: white;
+}
+
+.buscar:hover {
+    background: linear-gradient(135deg, #1e3c72, #132669);
+}
+
+.limpia {
+    background: linear-gradient(135deg, #888ba1, #5c5f73);
+    color: white;
+}
+
+.limpia:hover {
+    background: linear-gradient(135deg, #5c5f73, #888ba1);
+}
+
+/*Estilos Formulario de evaluacion*/
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: none;
+    background: #f5f7fa;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Ítems de pestaña */
+.nav-tabs .nav-item {
+    list-style: none;
+}
+
+/* Enlaces de pestaña */
+.nav-tabs .nav-link {
+    display: block;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #333;
+    background: #e9ecf3;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+/* Hover */
+.nav-tabs .nav-link:hover {
+    background-color: #d0d4e0;
+    color: #000;
+}
+
+/* Activa */
+.nav-tabs .nav-link.active {
+    background-color: #132669;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenido de pestañas */
+.tab-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Paneles individuales */
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: block;
+    background-color: #ffff;
+}
+.tab-pane label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    background-color: #f0f2f8;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para select e input */
+.tab-pane select{
     width: 100%;
-    padding: 8px;
-  }
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d4e8;
+    border-radius: 10px;
+    background-color: #f9faff;
+    color: #2c3e50;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.tab-pane input{
+    width: 96%;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d4e8;
+    border-radius: 10px;
+    background-color: #f9faff;
+    color: #2c3e50;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Efecto al enfocar */
+.tab-pane select:focus,
+.tab-pane input:focus {
+    outline: none;
+    border-color: #4a6ee0;
+    box-shadow: 0 0 0 3px rgba(74, 110, 224, 0.2);
+    background-color: #ffffff;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/*Estilos botones crear evaluacion*/
+.top-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.buttons {
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+}
+.buttons:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.save {
+    padding: 10px 35px;
+    background: linear-gradient(135deg, #132669, #1e3c72);
+    color: white;
+}
+
+.save:hover {
+    background: linear-gradient(135deg, #1e3c72, #132669);
+}
+
+.clear {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #888ba1, #5c5f73);
+    color: white;
+}
+
+.clear:hover {
+    background: linear-gradient(135deg, #5c5f73, #888ba1);
 }

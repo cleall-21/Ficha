@@ -12,9 +12,11 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
 import pandas as pd
-from .forms_evaluacion import (EvaluacionForm, EvaluacionFormalidadForm,
-                    EvaluacionGestionOtorgaForm, EvaluacionDepuracionAntecedentesForm)
+from .forms_evaluacion import (EvaluacionFormalidadForm,
+                    EvaluacionGestionOtorgaForm, EvaluacionDepuracionAntecedentesForm,EvaluacionIngresoDeDatosForm)
+from .forms_evaluacion import EvaluacionForm, FormalidadFormSet, GestionOtorgaFormSet, DepuracionAntecedentesFormSet, IngresoDeDatosFormSet
 from .forms import SucursalForm
+
 # Create your views here.
 def registro(request):
     if request.method == 'POST':
@@ -88,62 +90,146 @@ def base(request):
     form, filtros = filtro_form(request)
     return render(request, 'web/base.html', {'form': form, 'filtros': filtros})
 
-@login_required
-def index(request):
-    form, filtros = filtro_form(request)
-    return render(request, 'web/index.html', {'form': form, 'filtros': filtros})
+#def index(request):
+   ## form, filtros = filtro_form(request)
+   ## return render(request, 'web/index.html', {'form': form, 'filtros': filtros})
 
 @login_required
-def form_formalidad(request):
-    if request.method == "GET":
-        return render(request,'web/form_formalidad.html',{'form_evaluacion': EvaluacionFormalidadForm})
+def index(request):
+    if request.method == 'POST':
+        evaluacion_form = EvaluacionForm(request.POST)
+        formalidad_formset = FormalidadFormSet(request.POST, instance=evaluacion_form.instance)
+        gestion_otorga_formset = GestionOtorgaFormSet(request.POST, instance=evaluacion_form.instance)
+        depuracion_antecedentes_formset = DepuracionAntecedentesFormSet(request.POST, instance=evaluacion_form.instance)
+        ingreso_datos_formset = IngresoDeDatosFormSet(request.POST, instance=evaluacion_form.instance)
+
+        if evaluacion_form.is_valid() and formalidad_formset.is_valid() and gestion_otorga_formset.is_valid() and depuracion_antecedentes_formset.is_valid() and ingreso_datos_formset.is_valid():
+            evaluacion = evaluacion_form.save(commit=False)
+            evaluacion.user = request.user  # Asignar el usuario actual a la evaluación
+            evaluacion.save()
+
+            formalidad_formset.instance = evaluacion
+            formalidad_formset.save()
+
+            gestion_otorga_formset.instance = evaluacion
+            gestion_otorga_formset.save()
+
+            depuracion_antecedentes_formset.instance = evaluacion
+            depuracion_antecedentes_formset.save()
+
+            ingreso_datos_formset.instance = evaluacion
+            ingreso_datos_formset.save()
+
+            return redirect('index')
+        else:
+            return render(request, 'web/index.html',
+                          {
+                'evaluacion_form': evaluacion_form,
+                'formalidad_formset': formalidad_formset,
+                'gestion_otorga_formset': gestion_otorga_formset,
+                'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
+                'ingreso_datos_formset': ingreso_datos_formset,
+                'error': 'Formulario no válido'
+            })
     else:
-        try:
-            form_evaluacion = EvaluacionFormalidadForm(request.POST)
-            if form_evaluacion.is_valid():
-                new_formalidad = form_evaluacion.save(commit=False)
-                new_formalidad.user = request.user
-                new_formalidad.save()
-                return redirect('form_formalidad')
-            else:
-                return render(request, 'web/form_formalidad.html', {'form': form_evaluacion, 'error': 'Formulario no válido'})
-        except ValueError:
-            return render(request, 'web/form_formalidad.html',{'form': EvaluacionFormalidadForm,'error':'Error al crear la Evaluación'})
+        evaluacion_form = EvaluacionForm()
+        formalidad_formset = FormalidadFormSet(instance=evaluacion_form.instance)
+        gestion_otorga_formset = GestionOtorgaFormSet(instance=evaluacion_form.instance)
+        depuracion_antecedentes_formset = DepuracionAntecedentesFormSet(instance=evaluacion_form.instance)
+        ingreso_datos_formset = IngresoDeDatosFormSet(instance=evaluacion_form.instance)
+
+        return render(request, 'web/index.html', 
+            {
+            'evaluacion_form': evaluacion_form,
+            'formalidad_formset': formalidad_formset,
+            'gestion_otorga_formset': gestion_otorga_formset,
+            'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
+            'ingreso_datos_formset': ingreso_datos_formset
+        })
+
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 @login_required
 def listar_evaluaciones(request):
-    evaluaciones = EvaluacionFormalidad.objects.filter(user=request.user)
-    return render(request, 'web/listar_evaluaciones.html', {'evaluaciones': evaluaciones})
+    evaluaciones = Evaluacion.objects.filter(user=request.user)
+    # Filtros
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    sucursal = request.GET.get('sucursal')
+
+    if fecha_inicio and fecha_fin:
+        evaluaciones = evaluaciones.filter(fecha__range=[fecha_inicio, fecha_fin])
+    if sucursal:
+        evaluaciones = evaluaciones.filter(clasificacion__icontains=sucursal)  # Ajusta si tienes un campo específico para sucursal
+
+    # Paginación
+    paginator = Paginator(evaluaciones, 5)  # 5 por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'web/listar_evaluaciones.html', {
+        'page_obj': page_obj,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'sucursal': sucursal
+    })
 
 
 @login_required
-def detalle_eva(request, id_formalidad):
-    if request.method == 'GET':
-        eva = get_object_or_404(EvaluacionFormalidad, pk=id_formalidad, user=request.user)
-        form = EvaluacionFormalidadForm(instance=eva)
-        return render(request, 'web/detalle_eva.html', {'eva': eva, 'form': form})
-    else:
-        try:
-            eva = get_object_or_404(EvaluacionFormalidad, pk=id_formalidad, user=request.user)
-            form = EvaluacionFormalidadForm(request.POST, instance=eva)
-            form.save()
+def detalle_eva(request, id_evaluacion):
+    evaluacion = get_object_or_404(Evaluacion, pk=id_evaluacion, user=request.user)
+
+    if request.method == 'POST':
+        evaluacion_form = EvaluacionForm(request.POST, instance=evaluacion)
+        formalidad_formset = FormalidadFormSet(request.POST, instance=evaluacion)
+        gestion_otorga_formset = GestionOtorgaFormSet(request.POST, instance=evaluacion)
+        depuracion_antecedentes_formset = DepuracionAntecedentesFormSet(request.POST, instance=evaluacion)
+        ingreso_datos_formset = IngresoDeDatosFormSet(request.POST, instance=evaluacion)
+
+        if (evaluacion_form.is_valid() and formalidad_formset.is_valid() and
+            gestion_otorga_formset.is_valid() and depuracion_antecedentes_formset.is_valid() and
+            ingreso_datos_formset.is_valid()):
+            
+            evaluacion_form.save()
+            formalidad_formset.save()
+            gestion_otorga_formset.save()
+            depuracion_antecedentes_formset.save()
+            ingreso_datos_formset.save()
+
             return redirect('list_form')
-        except ValueError:
-            return render(request, 'web/detalle_eva.html', {'eva': eva, 'form': form, 'error': 'Error al modificar la evaluación'})
+        else:
+            return render(request, 'web/detalle_eva.html', {
+                'eva': evaluacion,  
+                'evaluacion_form': evaluacion_form,
+                'formalidad_formset': formalidad_formset,
+                'gestion_otorga_formset': gestion_otorga_formset,
+                'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
+                'ingreso_datos_formset': ingreso_datos_formset,
+                'error': 'Formulario no válido'
+            })
+
+    else:
+        evaluacion_form = EvaluacionForm(instance=evaluacion)
+        formalidad_formset = FormalidadFormSet(instance=evaluacion)
+        gestion_otorga_formset = GestionOtorgaFormSet(instance=evaluacion)
+        depuracion_antecedentes_formset = DepuracionAntecedentesFormSet(instance=evaluacion)
+        ingreso_datos_formset = IngresoDeDatosFormSet(instance=evaluacion)
+
+        return render(request, 'web/detalle_eva.html', {
+            'eva': evaluacion, 
+            'evaluacion_form': evaluacion_form,
+            'formalidad_formset': formalidad_formset,
+            'gestion_otorga_formset': gestion_otorga_formset,
+            'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
+            'ingreso_datos_formset': ingreso_datos_formset
+        })
 
 @login_required
-def complete_evaluacion(request, id_formalidad):
-    eva = get_object_or_404(EvaluacionFormalidad, pk=id_formalidad, user=request.user)
-    eva.completed = True
-    eva.save()
+def delete_evaluacion(request, id_evaluacion):
+    evaluacion = get_object_or_404(Evaluacion, pk=id_evaluacion, user=request.user)
+    evaluacion.delete()
     return redirect('list_form')
-
-@login_required
-def delete_evaluacion(request, id_formalidad):
-    eva = get_object_or_404(EvaluacionFormalidad, pk=id_formalidad, user=request.user)
-    eva.delete()
-    return redirect('list_form')
-
 
 @login_required
 def listar_ejec(request):

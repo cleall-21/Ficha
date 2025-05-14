@@ -1,16 +1,15 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Evaluacion,EvaluacionFormalidad,EvaluacionGestionOtorga,EvaluacionDepuracionAntecedentes,EvaluacionIngresoDeDatos
- 
 class EvaluacionForm(forms.ModelForm):
     class Meta:
         model = Evaluacion
-        fields = ['id_evaluacion',
-                  'tipo_cliente',
+        fields = ['tipo_cliente',
                   'fecha',
                   'nota_final',
                   'clasificacion',
+                  'user',
         ]
- 
 class EvaluacionFormalidadForm(forms.ModelForm):
     class Meta:
         model = EvaluacionFormalidad
@@ -24,9 +23,7 @@ class EvaluacionFormalidadForm(forms.ModelForm):
             'respuesta_acreditacion_ingresos',
             'tipo_error_acreditacion_ingresos',
             'observacion_acreditacion',
-            'evaluador',
         ]
- 
 class EvaluacionGestionOtorgaForm(forms.ModelForm):
     class Meta:
         model = EvaluacionGestionOtorga
@@ -44,7 +41,6 @@ class EvaluacionGestionOtorgaForm(forms.ModelForm):
             'respuesta_deudas_vinculadas',
             'observacion_res_deuda_vincu',
         ]
- 
 class EvaluacionDepuracionAntecedentesForm(forms.ModelForm):
     class Meta:
         model = EvaluacionDepuracionAntecedentes
@@ -100,7 +96,7 @@ class EvaluacionDepuracionAntecedentesForm(forms.ModelForm):
             'respuesta_monto_compra_sbif',
             'obs_monto_compra_sbif_dice',
             'obs_monto_compra_sbif_debe',
-            'observacion_monto_compra_sbif'
+            'observacion_monto_compra_sbif',
         ]
 class EvaluacionIngresoDeDatosForm(forms.ModelForm):
     class Meta:
@@ -149,5 +145,18 @@ class EvaluacionIngresoDeDatosForm(forms.ModelForm):
             'respuesta_estado_civil',
             'obs_estado_civil_dice',
             'obs_estado_civil_debe',
-            'observacion_estado_civil'
+            'observacion_estado_civil',
             ]
+        
+from django.forms import inlineformset_factory, BaseInlineFormSet
+
+class BaseEvaluacionFormSet(BaseInlineFormSet):
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # Ocultar el checkbox de eliminar
+        form.fields['DELETE'].widget = forms.HiddenInput()
+
+FormalidadFormSet = inlineformset_factory(Evaluacion, EvaluacionFormalidad, form=EvaluacionFormalidadForm, formset=BaseEvaluacionFormSet, extra=1)
+GestionOtorgaFormSet = inlineformset_factory(Evaluacion, EvaluacionGestionOtorga, form=EvaluacionGestionOtorgaForm, formset=BaseEvaluacionFormSet, extra=1)
+DepuracionAntecedentesFormSet = inlineformset_factory(Evaluacion, EvaluacionDepuracionAntecedentes, form=EvaluacionDepuracionAntecedentesForm, formset=BaseEvaluacionFormSet, extra=1)
+IngresoDeDatosFormSet = inlineformset_factory(Evaluacion, EvaluacionIngresoDeDatos, form=EvaluacionIngresoDeDatosForm, formset=BaseEvaluacionFormSet, extra=1)

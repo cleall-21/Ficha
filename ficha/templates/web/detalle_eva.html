@@ -1,24 +1,79 @@
-{% extends 'web/base.html' %}
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block estilos %}
+<link href="{% static 'css/detalle_eva.css' %}" rel="stylesheet">
+<title>Modificar Evaluación</title>
+{% endblock estilos %}
 
 {% block contenido %}
-<h1>Detalles de Evaluación</h1>
+  <div class="contenedor">
+      <h2>Modificar Evaluación</h2>
 
-{{ error }}
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
 
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button id='update' type="submit">Actualizar</button>
-</form>
+      <form method="POST">
+          {% csrf_token %}
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                  <a class="nav-link active" id="evaluacion-tab" data-toggle="tab" href="#evaluacion" role="tab" aria-controls="evaluacion" aria-selected="true">Evaluación</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="formalidad-tab" data-toggle="tab" href="#formalidad" role="tab" aria-controls="formalidad" aria-selected="false">Formalidad</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="gestion-tab" data-toggle="tab" href="#gestion" role="tab" aria-controls="gestion" aria-selected="false">Gestión Otorgamiento</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="depuracion-tab" data-toggle="tab" href="#depuracion" role="tab" aria-controls="depuracion" aria-selected="false">Depuración Antecedentes</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" id="ingreso-tab" data-toggle="tab" href="#ingreso" role="tab" aria-controls="ingreso" aria-selected="false">Ingreso de Datos</a>
+              </li>
+          </ul>
 
-<form action="{% url 'complete_evaluacion' eva.id_formalidad %}" method="POST">
-  {% csrf_token %}
-  <button id='revisado'type="submit">Revisado</button>
-</form>
+          <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="evaluacion" role="tabpanel" aria-labelledby="evaluacion-tab">
+                  {{ evaluacion_form.as_p }}
+              </div>
+              <div class="tab-pane fade" id="formalidad" role="tabpanel" aria-labelledby="formalidad-tab">
+                  {{ formalidad_formset.management_form }}
+                  {% for form in formalidad_formset %}
+                      {{ form.as_p }}
+                  {% endfor %}
+              </div>
+              <div class="tab-pane fade" id="gestion" role="tabpanel" aria-labelledby="gestion-tab">
+                  {{ gestion_otorga_formset.management_form }}
+                  {% for form in gestion_otorga_formset %}
+                      {{ form.as_p }}
+                  {% endfor %}
+              </div>
+              <div class="tab-pane fade" id="depuracion" role="tabpanel" aria-labelledby="depuracion-tab">
+                  {{ depuracion_antecedentes_formset.management_form }}
+                  {% for form in depuracion_antecedentes_formset %}
+                      {{ form.as_p }}
+                  {% endfor %}
+              </div>
+              <div class="tab-pane fade" id="ingreso" role="tabpanel" aria-labelledby="ingreso-tab">
+                  {{ ingreso_datos_formset.management_form }}
+                  {% for form in ingreso_datos_formset %}
+                      {{ form.as_p }}
+                  {% endfor %}
+              </div>
+          </div>
+          <button type="submit" class="btn_update">Actualizar Evaluación</button>
+      </form>
 
-<form action="{% url 'delete_evaluacion' eva.id_formalidad %}" method="POST">
-  {% csrf_token %}
-  <button id='delete' type="submit">Eliminar</button>
-</form>
+      <form action="{% url 'delete_evaluacion' eva.id_evaluacion %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn_delete">Eliminar Evaluación</button>
+      </form>
+  </div>
 
+
+  {% block js %}
+  <script src="{% static 'js/formEva.js' %}"></script>
+  {% endblock js %}
 {% endblock %}

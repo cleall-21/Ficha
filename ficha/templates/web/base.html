@@ -1,68 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
-{% load static %}
-{% block estilos %}
-{% endblock estilos %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-  
-    <title>BancoChile</title>
-</head>
-<body>
-    <header class="header">
-        <div class="container">
-            <div class="btn-menu">
-                <label for="btn-menu">☰</label>
-            </div>
-        </div>
-        <nav>
-            <img src="{% static 'img/logoBch.png' %}" id="logo" alt="logoBch">
-        </nav>
-        <div class="container-user">
-            <div class="paste-button">
-                {% if user.is_authenticated %}
-                    <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo">
-                    <div id="user-status" class="circle"></div> <!-- Círculo de estado -->
-                {% else %}
-                    <button class="button fa-solid fa-user"></button>
-                {% endif %}
-                <div class="dropdown-content">
+    {% load static %}
+    {% block estilos %}
+    {% endblock estilos %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <title>Banco de Chile</title>
+    </head>
+    <body>
+        <header class="header">
+                <div class="btn-menu">
+                    <label for="btn-menu">☰</label>
+                </div>
+            <nav>
+                <img src="{% static 'img/logoBch.png' %}" id="logo" alt="logoBch">
+            </nav>
+            <div class="container-user">
+                <div class="paste-button">
                     {% if user.is_authenticated %}
-                        <a id="bottom" href="{% url 'index' %}">Ver Perfil: {{ user.first_name }} {{ user.last_name }}</a>
-                        <a id="bottom" href="{% url 'login' %}">Cerrar sesión</a>
+                        <img src="{{ user.userprofile.foto.url }}" alt="Foto de perfil" class="user-photo">
+                        <div id="user-status" class="circle"></div> <!-- Círculo de estado -->
                     {% else %}
-                        <a id="bottom" href="{% url 'login' %}">Inicia sesión</a>
-                        <a id="bottom" href="{% url 'registro' %}">Regístrate</a>
+                        <button class="button fa-solid fa-user"></button>
                     {% endif %}
+                    <div class="dropdown-content">
+                        {% if user.is_authenticated %}
+                            <a id="bottom" href="{% url 'index' %}">Ver Perfil: {{ user.first_name }} {{ user.last_name }}</a>
+                            <a id="bottom" href="{% url 'login' %}">Cerrar sesión</a>
+                        {% else %}
+                            <a id="bottom" href="{% url 'login' %}">Inicia sesión</a>
+                            <a id="bottom" href="{% url 'registro' %}">Regístrate</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+        </header>
+        <input type="checkbox" id="btn-menu" />
+        <div class="container-menu">
+            <div class="cont-menu">
+                <nav>
+                    <a href="{% url 'index' %}">Evaluacion Ejecutivos</a>
+                    <a href="{% url 'listado' %}">Listado Ejecutivos</a>
+                    <a href="{% url 'Reporte' %}">Reporte Sucursal</a>
+                    <a href="{% url 'list_form' %}">Listado Evaluaciones</a>
+                </nav>
+                <label for="btn-menu">✖️</label>
+            </div>
         </div>
-    </header>
-    <input type="checkbox" id="btn-menu" />
-    <div class="container-menu">
-        <div class="cont-menu">
-            <nav>
-                <a href="{% url 'index' %}">Evaluacion Ejecutivos</a>
-                <a href="{% url 'Listado' %}">Listado Ejecutivos</a>
-                <a href="{% url 'Reporte' %}">Reporte Sucursal</a>
-                <a href="{% url 'list_form' %}">Listado Evaluaciones</a>
-            </nav>
-            <label for="btn-menu">✖️</label>
-        </div>
-    </div>
-    <div class="capa"></div>
-    <div id="container">
-        <main>
+        <div class="wrapper">
             {% block contenido %}
             {% endblock contenido %}
-        </main>
-    </div>
-    <footer>
-        <p>© 2025 Mi Aplicación</p>
-    </footer>
-    <script src="{% static 'js/acciones.js' %}"></script>
-</body>
+        </div>
+        <script src="{% static 'js/acciones.js' %}"></script>
+        <footer>
+            <p>Ficha Excelencia Ejecutiva © 2025</p>
+        </footer>
+    </body>
 </html>

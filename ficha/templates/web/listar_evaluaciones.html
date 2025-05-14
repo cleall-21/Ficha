@@ -1,41 +1,51 @@
 {% extends 'web/base.html' %}
 {% load static %}
+
 {% block estilos %}
-  <link rel="stylesheet" href="{% static 'css/listar_eva.css' %}">
-{% endblock estilos %}
+<link rel="stylesheet" href="{% static 'css/listar_eva.css' %}">
+{% endblock %}
+
 {% block contenido %}
+  <div class="menu">
+    <h1>Listado de Evaluaciones</h1>
 
-<h1>Evaluación Ejecutivos</h1>
-<h2>Pilar Formalidad</h2>
+    <form method="get" class="filtros">
+      <h2>Filtros de Busqueda</h2>
+      <label>Desde: <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}"></label>
+      <label>Hasta: <input type="date" name="fecha_fin" value="{{ fecha_fin }}"></label>
+      <label>Sucursal: <input type="text" name="sucursal" value="{{ sucursal }}"></label>
+      <div class="buttons">
+        <button type="submit" class="button filtrar">Filtrar</button>
+        <button type="reset" class="button limpiar">Limpiar</button>
+      </div>
+    </form>
+    <ul>
+      {% for evaluacion in page_obj %}
+      <li>
+        <a href="{% url 'detalle_eva' evaluacion.id_evaluacion %}">
+          <strong>Evaluación N°:</strong> {{ evaluacion.id_evaluacion }}<br>
+          <strong>Fecha:</strong> {{ evaluacion.fecha }}<br>
+          <strong>Clasificación:</strong> {{ evaluacion.clasificacion }}<br>
+          <strong>Nota Final:</strong> {{ evaluacion.nota_final }}<br>
+        </a>
+      </li>
+      {% empty %}
+      <li>No se encontraron evaluaciones.</li>
+      {% endfor %}
+    </ul>
 
-<ul>
-  {% for evaluacion in evaluaciones %}
-  <li>
-    <a href="{% url 'detalle_eva' evaluacion.id_formalidad %}">
-      <strong>Numero de Evaluacion: </strong> 
-      <p>{{ evaluacion.id_formalidad }}</p>
-      <strong>Verificación Laboral: </strong> 
-      <p>{{ evaluacion.respuesta_verificacion_laboral }}</p>
-      <strong>Tipo de error: </strong> 
-      <p>{{ evaluacion.tipo_error_verificacion_laboral }}</p>
-      <strong>Observaciones: </strong>
-      <p>{{ evaluacion.observacion_verificacion }}</p>
-      <strong>Estado de Situación: </strong> 
-      <p>{{ evaluacion.respuesta_estado_situacion }}</p>
-      <strong>Tipo de error: </strong> 
-      <p>{{ evaluacion.tipo_error_estado_situacion }}</p>
-      <strong>Observaciones: </strong>
-      <p>{{ evaluacion.observacion_estado }}</p>
-      <strong>Acreditación Ingresos: </strong> 
-      <p>{{ evaluacion.respuesta_acreditacion_ingresos }}</p>
-      <strong>Tipo de error: </strong> 
-      <p>{{ evaluacion.tipo_error_acreditacion_ingresos }}</p>
-      <strong>Observaciones: </strong>
-      <p>{{ evaluacion.observacion_acreditacion }}</p>
-      <p><strong>Evaluador:</strong> {{ evaluacion.evaluador }}</p>
-    </a>
-  </li>
-  {% endfor %}
-</ul>
+    <div class="paginacion">
+      {% if page_obj.has_previous %}
+        <a href="?page=1&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&sucursal={{ sucursal }}">Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&sucursal={{ sucursal }}">Anterior</a>
+      {% endif %}
 
-{% endblock contenido %}
+      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&sucursal={{ sucursal }}">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&sucursal={{ sucursal }}">Última</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,15 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block estilos %}
+    <link href="{% static 'css/carga_mate.css' %}" rel="stylesheet">
+    <title>Carga de Materialidad</title>
+{% endblock estilos %}
+
+{% block contenido %}
+<div class="contenedor">
+    <h1>Carga de Materialidad</h1>
+    <p>Aquí se podrá cargar la materialidad para poder realizar las pruebas comparativas con el formulario actual en Excel</p>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="archivo" accept=".xlsx">
-        <button type="submit">Cargar</button>
+        <label class="file-label">
+            <i class="fas fa-file-upload"></i>
+            <input type="file" name="archivo" accept=".xlsx">
+        </label>
+        <button type="submit">
+        <i class="fas fa-upload"></i> Cargar
+</button>
+
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
+

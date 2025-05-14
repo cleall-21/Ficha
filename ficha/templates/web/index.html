@@ -1,21 +1,16 @@
 {% extends "web/base.html" %}
 {% load static %}
-{% include 'web/resultados.html' %}
 
 {% block estilos %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
+<title>Ficha de Evaluación</title>
 {% endblock estilos %}
 
 {% block contenido %}
-<div class="capa"></div>
-<div class="tarjeta">
-    <h3>Calificación / Estado de Carpeta</h3>
-    <div class="resultado">Excelente</div>
-</div>
-<div id="container">
-    <main>
+    <div class="evaluacion">
         <div class="resultados">
             <form method="POST" id="sucursalForm" class="form2" >
+            <h2>Busqueda de oportunidad</h2>
                 {% csrf_token %}
                 <label for="fechaInicio">Fecha Inicio:</label>
                 <input type="date" id="fechaInicio" name="fechaInicio">
@@ -30,492 +25,62 @@
                     {{ form.nombre_ejecutivo }}
                 </div>
                 <div class="botones">
-                    <button type="submit" class="button">Buscar Oportunidad</button>
-                    <button type="reset" class="button" id="limpiarBtn">Limpiar</button>
+                    <button type="reset" class="button limpia">Limpiar</button>
+                    <button  class="button buscar">Buscar Oportunidad</button>
                 </div>
             </form>
             <div id="resul">
                 {% include 'web/resultados.html' %}
             </div>
         </div>
-    </main>
-<section class="evaluacion_section">
-    <form action="/index/" class="form_evaluacion" method="POST" >
-        {% csrf_token %}
-        <div class="forms_title">
-            <h1> Evaluación Ejecutivo </h1>
+        <div class="container">
+            <h2>Evaluación de Ejecutivos</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="evaluacion-tab" data-toggle="tab" href="#evaluacion" role="tab" aria-controls="evaluacion" aria-selected="true">Evaluación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="formalidad-tab" data-toggle="tab" href="#formalidad" role="tab" aria-controls="formalidad" aria-selected="false">Formalidad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="gestion-tab" data-toggle="tab" href="#gestion" role="tab" aria-controls="gestion" aria-selected="false">Gestión Otorgamiento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="depuracion-tab" data-toggle="tab" href="#depuracion" role="tab" aria-controls="depuracion" aria-selected="false">Depuración Antecedentes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="ingreso-tab" data-toggle="tab" href="#ingreso" role="tab" aria-controls="ingreso" aria-selected="false">Ingreso de Datos</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="evaluacion" role="tabpanel" aria-labelledby="evaluacion-tab">
+                        {{ evaluacion_form.as_p }}
+                    </div>
+                    <div class="tab-pane fade" id="formalidad" role="tabpanel" aria-labelledby="formalidad-tab">
+                        <h3> Verificacion Laboral</h3>
+                        {{ formalidad_formset.as_p }}
+                    </div>
+                    <div class="tab-pane fade" id="gestion" role="tabpanel" aria-labelledby="gestion-tab">
+                        {{ gestion_otorga_formset.as_p }}
+                    </div>
+                    <div class="tab-pane fade" id="depuracion" role="tabpanel" aria-labelledby="depuracion-tab">
+                        {{ depuracion_antecedentes_formset.as_p }}
+                    </div>
+                    <div class="tab-pane fade" id="ingreso" role="tabpanel" aria-labelledby="ingreso-tab">
+                        {{ ingreso_datos_formset.as_p }}
+                    </div>
+                </div>
+                <div class="top-buttons">
+                    <button type="reset" class="buttons clear">Limpiar</button>
+                    <button  class="buttons save">Guardar</button>
+                </div>
+            </form>
         </div>
-         <!-- Tipo de Cliente -->
-    <div class="tipoCliente">
-        <select id="tipoClienteSelect" name="tipoCliente">
-            <option value="">Seleccione Un Tipo De Cliente</option>
-            <option value="prospecto">Prospecto</option>
-            <option value="nuevo">Nuevo</option>
-            <option value="antiguo">Antiguo</option>
-            <option value="plus">Plus</option>
-        </select>
     </div>
-        <div class="formulario_input">
-            <div class="nav_pilares">
-                <select id="pilar_select" name="pilares" onchange="mostrarPilares()">
-                    <option style="display:none;">Seleccione Un Pilar</option>
-                    <option value="formalidad">Formalidad</option>
-                    <option value="gestion_otorga">Gestión Otorgamiento</option>
-                    <option value="depuracon_antece">Depuración de Antecedentes</option>
-                    <option value="ingreso_datos">Ingreso de Datos</option>
-                </select>
-            </div>
-            <div class="select_forms">
-                <!---- Formulario pilar formalidad --> 
-                <div id="formFormalidad" class="componente-form">
-                    <div id="section1" class="section">
-                        <h3>Formalidad</h3>
-                        <label>Verificación Laboral</label>
-                        <div class="inputs">
-                            <select id="respuesta-verificacion-laboral" name="respuesta-verificacion-laboral">
-                                <option value="">Seleccione</option>
-                                <option value="sin-error">SIN ERROR</option>
-                                <option value="error">ERROR</option>
-                                <option value="n/a">N/A</option>
-                            </select>
-                            <select name="tipo-error-verificacion-laboral">
-                                <option value="">Seleccione</option>
-                                <option value="no-esta-en-carpeta">No está en carpeta</option>
-                                <option value="verificacion-incompleta">Verificación incompleta</option>
-                            </select>
-                            <input type="text" name="observacion_verfic" placeholder="Observaciones">
-                        </div>
-                        <label>Estado de Situación</label>
-                        <div class="inputs">
-                            <select id="respuesta-estado-situacion" name="respuesta-estado-situacion">
-                                <option value="">Seleccione</option>
-                                <option value="sin-error">SIN ERROR</option>
-                                <option value="error">ERROR</option>
-                                <option value="n/a">N/A</option>
-                            </select>
-                            <select name="tipo-error-estado-situacion">
-                                <option value="">Seleccione</option>
-                                <option value="es-sin-fecha">E.S. sin fecha</option>
-                            </select>
-                            <input type="text" name="observacion_estado" placeholder="Observaciones">
-                        </div>
-                        <label>Acreditación Ingresos</label>
-                        <div class="inputs">
-                            <select id="respuesta-acreditacion-ingresos" name="respuesta-acreditacion-ingresos">
-                                <option value="">Seleccione</option>
-                                <option value="sin-error">SIN ERROR</option>
-                                <option value="error">ERROR</option>
-                                <option value="n/a">N/A</option>
-                            </select>
-                            <select name="tipo-error-acreditacion-ingresos">
-                                <option value="">Seleccione</option>
-                                <option value="sin-acreditaciones-cuenta-estudiante">Sin acreditaciones cta. estudiante</option>
-                                <option value="sin-acreditaciones-cta-mujer">Sin acreditaciones cta. mujer</option>
-                                <option value="sin-acreditaciones">Sin acreditaciones</option>
-                                <option value="acreditaciones-insuficientes">Acreditaciones insuficientes</option>
-                                <option value="documentacion-sin-validar">Documentación sin validar</option>
-                                <option value="faltan-antecedentes-empleador">Faltan antecedentes empleador</option>
-                                <option value="falta-antecedentes-relacionados">Faltan antecedentes relacionados</option>
-                                <option value="acreditacion-con-inconsistencias">Acreditación con inconsistencias</option>
-                            </select>
-                            <input type="text" name="observacion_acredita" placeholder="Observaciones">
-                        </div>
-                        <button type="button" class="tablinks" onclick="validateSection1(event)">Siguiente Pilar</button>
-                        <button type="submit" class="button">Guardar</button>
-                    </div>
-                </div>
-                <!------ Formulario pilar gestión de otorgamiento ------------------------------------>
-                <div id="formGestion_otorga" class="componente-form" style="display:none;">
-                    <div id="section2" class="section">
-                        <h3>Gestión de Otorgamiento</h3>                
-                        <label> Atribuciones</label>
-                        <div class="inputs">
-                            <select id="respuesta-atribuciones">
-                                <option value=""> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select>
-                            <input type="text" name="observaciones-revision-credito" placeholder=" Observaciones">                             
-                        </div>
-                        <div class="form-group">
-                        <label> Contribución Garantías y/o Aval </label>
-                        <div class="inputs">
-                            <select id="respuesta-contribucion-garantia">
-                                <option value=""> Seleccione </option>
-                                <option value="sin-error"> SIN ERROR </option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select>
-                            <input type="text" name="observaciones-contribucion-garantia" placeholder="Observaciones">
-                        </div>
-                        </div>
-                        <div class="form-group">
-                        <label> Condiciones de Aprobación </label>
-                        <div class="inputs">
-                            <select id="respuesta-condiciones-aprobacion">
-                                <option value=""> Selecione </option>
-                                <option value="sin-error"> SIN ERROR </option>
-                                <option value="error"> ERROR</option>
-                                <option value="n/a"> N/A </option>
-                            </select>
-                            <select name="tipo-error-condiciones-aprobacion">
-                                <option value=""> Seleccione </option>
-                                <option value="cumple-parcialmente"> Cumple Parcialmente </option>
-                                <option value="incumplimiento-total"> Incumplimiento Total </option>
-                            </select>  
-                            <input type="text" name="observacion_condicion_aprob" placeholder="Observaciones"> 
-                        </div>
-                        </div>
-                        <!--campo cambio resultado evaluacion automatica-->
-                        <div class="form-group">
-                        <label> Cambio Resultado Evaluación Automática </label>
-                        <div class="inputs">
-                            <select id="Cambio_evaAT">
-                                <option value=""> Seleccione </option>
-                                <option value="sin-error"> SIN ERROR </option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select>
-                            <select name="tipo-error-Cambio_evaAT">
-                                <option value=""> Seleccione </option>
-                                <option value="de-cumple-no-cumple"> De Cumple a No Cumple </option>
-                                <option value="de-no-cumple-acumple"> De No Cumple a Cumple </option>
-                            </select>
-                            <input type="text" name="observacion_cambioEva" placeholder="Observaciones">  
-                        </div>  
-                        </div>
-                        <!--campo deudas vinculadas-->
-                        <div class="form-group">
-                        <label> Deudas Vinculadas </label>
-                            <div class="inputs">
-                                <select name="respuesta-deudas-vinculadas">
-                                    <option value=""> Seleccione </option>
-                                    <option value="sin-error"> SIN ERROR </option>
-                                    <option value="error"> ERROR </option>
-                                    <option value="n/a"> N/A </option>
-                                </select>
-                                <input type="text" name="observacion_res_deuda_vincu" placeholder="Observaciones">                                                  
-                            </div>
-                            <button type="button" onclick="goBack('section1')">Pilar Anterior</button>
-                            <button type="button" class="tablinks" onclick="validateSection2(event)">Siguiente Pilar</button>
-                        </div>
-                    </div>
-                </div>
-                <!------ Formulario pilar depuracion de antecedentes ----------------------------->
-                <div id="formDepuracon_antece" class="componente-form" style="display:none;">
-                    <div id="section3" class="section">
-                        <h3> Depuración de Antecedentes </h3>                    
-                        <!--campo depuracion de antecedentes-->
-                        <label> Ingresos Mensuales </label>
-                        <div class="inputs">
-                            <select name="respuesta-ingresos-mensuales">
-                                <option value=""> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs-ingresos-mensuales" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs-ingresos-mensuales" placeholder="Debe Decir (m$)"> 
-                                <input type="text" name="obs-ingresos-mensuales" placeholder="Observaciones">
-                        </div>    
-                        <label> Activo </label>
-                        <div class="inputs">
-                            <select name="respuesta-activo">
-                                <option value=""> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs-activo" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs-activo" placeholder="Debe Decir (m$)" >
-                                <input type="text" name="obs-activo" placeholder="Observacion">    
-                        </div> 
-                        <label> Dividendo BCH (actual y sin cursar) o Gasto Vivienda </label>
-                        <div class="inputs">
-                            <select name="respuesta-dividendo-gasto-vivienda">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="observaciones-dividendo-gasto-vivienda" placeholder="Dice (m$)" > 
-                                <input type="text" name="observaciones-dividendo-gasto-vivienda" placeholder="Debe Decir (m$)" >
-                                <input type="text" name="observaciones-dividendo-gasto-vivienda" placeholder="Observaciones" >    
-                        </div>      
-                        <label> Arriendos Pagados </label>
-                        <div class="inputs">
-                            <select name="arriendos_pagados">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                            <input type="text" name="obs_arriendos_pagados" placeholder="Dice (m$)" > 
-                            <input type="text" name="obs_arriendos_pagados" placeholder="Debe Decir (m$)"> 
-                            <input type="text" name="obs_arriendos_pagados" placeholder="Observaciones">     
-                        </div>
-                        <label> Cuota Préstamo Empleador y/o CCAF </label>
-                        <div class="inputs">
-                            <select name="Cuota_presta_empleador">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                            <input type="text" name="obs_presta_empleador" placeholder="Dice (m$)" > 
-                            <input type="text" name="obs_presta_empleador" placeholder="Debe Decir (m$)" > 
-                            <input type="text" name="obs_presta_empleador" placeholder="Observaciones" >      
-                        </div>                    
-                        <label> Otros Egresos </label>
-                        <div class="inputs">
-                            <select name="Otro_egresos">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                            <input type="text" name="obs_Otro_egresos" placeholder="Dice (m$)"> 
-                            <input type="text" name="obs_Otro_egresos" placeholder="Debe Decir (m$)"> 
-                            <input type="text" name="obs_Otro_egresos" placeholder="Observaciones" >
-                        </div>  
-                        <h3> Producto Compra de Cartera </h3>
-                        <label> Monto a Reestructurar Renegociado Corto Plazo y Largo Plazo </label>
-                        <div class="inputs">
-                            <select name="Reestructurar_renegociado">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Reestructurar_renegociado" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Reestructurar_renegociado" placeholder="Debe Decir (m$)"> 
-                                <input type="text" name="obs_Reestructurar_renegociado" placeholder="Observaciones">
-                        </div> 
-                        <label> Cuota Banco CP (Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Cuota_banco_CP">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Cuota_banco_CP" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Cuota_banco_CP" placeholder="Debe Decir (m$)" > 
-                                <input type="text" name="obs_Cuota_banco_CP" placeholder="Observaciones" >
-                        </div>
-                        <label>Cuota Compra OOII (Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Cuota_compra_OOII">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Cuota_compra_OOII" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Cuota_compra_OOII" placeholder="Debe Decir (m$)" > 
-                                <input type="text" name="obs_Cuota_compra_OOII" placeholder="Observaciones" >
-                        </div>
-                        <label> Monto Compra Banco LP(Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Monto_compra_bancoLP">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Monto_compra_bancoLP" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Monto_compra_bancoLP" placeholder="Debe Decir (m$)" > 
-                                <input type="text" name="obs_Monto_compra_bancoLP" placeholder="Observaciones" >
-                        </div> 
-                        <label> Monto Compra Banco CP (Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Monto_compra_bancoCP">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Monto_compra_bancoCP" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Monto_compra_bancoCP" placeholder="Debe Decir (m$)" > 
-                                <input type="text" name="obs_Monto_compra_bancoCP" placeholder="Observaciones">
-                        </div>
-                        <label> Monto Compra OOII (Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Monto_compra_OOII">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Monto_compra_OOII" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Monto_compra_OOII" placeholder="Debe Decir (m$)"> 
-                                <input type="text" name="obs_Monto_compra_OOII" placeholder="Observaciones" >
-                        </div>
-                        <label> Monto Compra SBIF (Compra Cartera) </label>
-                        <div class="inputs">
-                            <select name="Monto_compraSBIF">
-                                <option value=> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select> 
-                                <input type="text" name="obs_Monto_compraSBIF" placeholder="Dice (m$)" > 
-                                <input type="text" name="obs_Monto_compraSBIF" placeholder="Debe Decir (m$)" > 
-                                <input type="text" name="obs_Monto_compraSBIF" placeholder="Observaciones">
-                        </div>
-                        <button type="button" onclick="goBack('section2')">Pilar Anterior</button>
-                        <button type="button" class="tablinks3" onclick="validateSection3()">Siguiente Pilar</button>
-                    </div>
-                </div>
-                <!------ Formulario pilar ingreso de datos ----------------------------->
-                <div id="formIngreso_datos" class="componente-form" style="display:none;" >
-                    <div id="section4" class="section">
-                        <h3> Ingreso de Datos </h3> 
-                        <label> Actividad </label>
-                        <div class="inputs">
-                            <select name="Actividad">
-                                <option value=""> Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="n/a"> N/A </option>
-                            </select>             
-                            <input type="text" name="obs_Actividad" placeholder="Dice" > 
-                            <input type="text" name="obs_Actividad" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Actividad" placeholder="Observaciones">
-                        </div>
-                        <label> Dirección Particular </label>
-                        <div class="inputs">
-                                <select name="Dirección_Particular">
-                                    <option value=>Selecione </option>
-                                    <option value="sin-error"> SIN ERROR</option>
-                                    <option value="error"> ERROR </option>
-                                    <option value="N/A"> N/A </option>
-                                </select>
-                                <input type="text" name="obs_Dirección_Part" placeholder="Dice" > 
-                                <input type="text" name="obs_Dirección_Part" placeholder="Debe Decir "> 
-                                <input type="text" name="obs_Dirección_Part" placeholder="Observaciones">
-                        </div>
-                        <label> Universidad </label>
-                        <div class="inputs">
-                                <select name="Universidad">
-                                    <option value=>Selecione </option>
-                                    <option value="sin-error"> SIN ERROR</option>
-                                    <option value="error"> ERROR </option>
-                                    <option value="N/A"> N/A </option>
-                                </select>
-                                <input type="text" name="obs_Universidad" placeholder="Dice" > 
-                                <input type="text" name="obs_Universidad" placeholder="Debe Decir "> 
-                                <input type="text" name="obs_Universidad" placeholder="Observaciones">
-                        </div>
-                        <label> Fecha de Ingreso Empleo </label>
-                        <div class="inputs">
-                            <select name="Fecha_ing_empleo">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Fecha_ing_empleo" placeholder="Dice" > 
-                            <input type="text" name="obs_Fecha_ing_empleo" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Fecha_ing_empleo" placeholder="Observaciones">
-                        </div>
-                        <label> Nivel Educacional </label>
-                        <div class="inputs">
-                            <select name="Nivel_educacional">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Nivel_educacional" placeholder="Dice" > 
-                            <input type="text" name="obs_Nivel_educacional" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Nivel_educacional" placeholder="Observaciones">
-                        </div>
-                        <label> Nacionalidad </label>
-                        <div class="inputs">
-                            <select name="Nacionalidad">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Nacionalidad" placeholder="Dice" > 
-                            <input type="text" name="obs_Nacionalidad" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Nacionalidad" placeholder="Observaciones">
-                        </div>
-                        <label> Tipo de Contrato </label>
-                        <div class="inputs">
-                            <select name="TipoContrato">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_TipoContrato" placeholder="Dice" > 
-                            <input type="text" name="obs_TipoContrato" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_TipoContrato" placeholder="Observaciones">
-                        </div>
-                        <label> Tipo de Renta </label>
-                        <div class="inputs">
-                            <select name="TipoRenta">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_TipoRenta" placeholder="Dice" > 
-                            <input type="text" name="obs_TipoRenta" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_TipoRenta" placeholder="Observaciones">
-                        </div>
-                        <label> Carrera/Semestre </label>
-                        <div class="inputs">
-                            <select name="Carrera_semestre">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Carrera_semestre" placeholder="Dice" > 
-                            <input type="text" name="obs_Carrera_semestre" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Carrera_semestre" placeholder="Observaciones">
-                        </div>
-                        <label> Profesión </label>
-                        <div class="inputs">
-                            <select name="Profesion">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Profesion" placeholder="Dice" > 
-                            <input type="text" name="obs_Profesion" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Profesion" placeholder="Observaciones">
-                        </div>
-                        <label> Estado Civil </label>
-                        <div class="inputs">
-                            <select name="Estado_civil">
-                                <option value=>Selecione </option>
-                                <option value="sin-error"> SIN ERROR</option>
-                                <option value="error"> ERROR </option>
-                                <option value="N/A"> N/A </option>
-                            </select>
-                            <input type="text" name="obs_Estado_civil" placeholder="Dice" > 
-                            <input type="text" name="obs_Estado_civil" placeholder="Debe Decir "> 
-                            <input type="text" name="obs_Estado_civil" placeholder="Observaciones">
-                        </div>
-                        <button type="button" onclick="goBack('section3')">Pilar Anterior</button>
-                    </div>
-                    <div class="top-buttons">
-                        <button type="reset" class="button">Limpiar</button>
-                        <button type="submit" class="button">Guardar</button>
-                    </div>
-                </div>    
-            </div>
-        </div>
-    </form>
-</section>
-{% block js %}
-<script src="{% static 'js/formalidad.js' %}"></script>
-{% endblock js %}
-{% endblock contenido %}
+    {% block js %}
+    <script src="{% static 'js/formEva.js' %}"></script>
+    {% endblock js %}
+
+{% endblock %}

@@ -1,72 +1,79 @@
+
+/* Estructura base para sticky footer */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo general del body */
 body {
   background-image: url('../img/fondo.jpg');
   background-position: center;
   background-attachment: fixed;
   background-size: cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
   font-size: 1rem;
   line-height: 1.5;
-  height: 100%;
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-#container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 10px;
-  width: 100%;
-  margin: 10px;
+  flex-direction: column;
 }
 
+/* Contenedor principal que empuja el footer hacia abajo */
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Footer fijo al final */
 footer {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: auto;
   align-items: center;
   color: #fff;
-  padding: 10px; 
+  padding: 10px;
   background-color: #343743b1;
-}
-.capa {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.6);
+  text-align: center;
 }
 
 /* Estilos para el encabezado */
 .header {
-  width: 100%;
+  width: auto;
   height: 70px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Distribuir espacio entre elementos */
-  padding: 10px;
+  justify-content: space-between;
+  padding: 10px 2rem;
   background-color: rgb(6, 22, 100);
   box-shadow: 0 3px 5px rgb(8, 8, 17);
+  box-sizing: border-box;
 }
 
 #logo {
   height: 70px;
   margin-top: 10px;
 }
+
 /* Estilos para la foto del usuario */
 .user-photo {
-  width: 70px; /* Ajustar tamaño de la foto */
+  width: 70px;
   height: 70px;
-  border-radius: 50%; /* Hacer la foto circular */
+  border-radius: 50%;
   object-fit: cover;
 }
 
 /* Contenedor del usuario */
 .container-user {
-  display: flex; /* Usar flexbox para alinear elementos */
+  display: flex;
   align-items: center;
   color: white;
-  padding-right: 10px; /* Espacio a la derecha */
+  padding-right: 10px;
 }
 
 /* Estilos para el icono de usuario */
@@ -75,62 +82,170 @@ footer {
   border-right: 1px solid rgb(157, 154, 172);
   text-decoration: none;
 }
+
+/* Indicador de estado */
 .circle {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: grey; /* Color por defecto */
+  background-color: grey;
   margin-left: 1px;
   display: flex;
-  position: absolute; /* Posición absoluta para el menú desplegable */
-  z-index: 1; /* Asegurarse de que el menú desplegable esté por encima de otros elementos */
-  right: 0; /* Alinear el menú desplegable hacia la izquierda */
-  transform: translateX(-200%); /* Desplazar el menú hacia la izquierda */
-  top: 60px; /* Ajustar la posición vertical para que quede más arriba */
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  transform: translateX(-200%);
+  top: 60px;
 }
+
 .active {
-  background-color: rgb(38, 226, 38); /* Color para usuario activo */
+  background-color: rgb(38, 226, 38);
 }
+
 .inactive {
-  background-color: rgb(204, 10, 10); /* Color para usuario inactivo */
+  background-color: rgb(204, 10, 10);
+}
+/* ===================== */
+/* Estilos responsivos   */
+
+/* Monitores grandes (hasta 2560px) */
+@media (max-width: 2560px) {
+  body {
+    font-size: 1rem;
+  }
+
+  .wrapper {
+    padding: 2rem 4rem;
+  }
+
+  .header {
+    padding: 10px 2rem;
+  }
+
+  footer {
+    padding: 10px;
+  }
+
+  .user-photo {
+    width: 70px;
+    height: 70px;
+  }
+
+  .container-user {
+    padding-right: 10px;
+  }
+
+  .circle {
+    width: 12px;
+    height: 12px;
+  }
 }
 
-/* Estilos responsivos */
+/* Pantallas medianas (notebooks, tablets grandes) */
+@media (max-width: 1920px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  .wrapper {
+    padding: 2rem;
+  }
+
+  .header {
+    padding: 10px 1.5rem;
+  }
+
+  footer {
+    padding: 8px;
+  }
+
+  .user-photo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .container-user {
+    padding-right: 8px;
+  }
+
+  .circle {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Pantallas pequeñas (tablets, notebooks pequeños) */
+@media (max-width: 900px) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  .wrapper {
+    padding: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  #logo {
+    margin-top: 0;
+  }
+
+  .container-user {
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+
+  footer {
+    padding: 6px;
+  }
+
+  .user-photo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .circle {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Pantallas móviles */
 @media (max-width: 768px) {
+  body {
+    font-size: 0.85rem;
+  }
+
+  .wrapper {
+    padding: 1rem;
+  }
+
   .header {
-    flex-direction: column; /* Cambiar a columna en pantallas más pequeñas */
-    align-items: flex-start; /* Alinear elementos al inicio */
+    padding: 0.5rem;
   }
 
-  .container-user {
-    justify-content: center; /* Centrar en pantallas más pequeñas */
-    padding-right: 0;
-    margin-top: 10px; /* Añadir margen superior */
+  footer {
+    font-size: 0.9rem;
+    padding: 0.75rem;
   }
 
-  .container-user .fa-user {
-    font-size: 1.5rem; /* Ajustar tamaño del icono */
-    padding-right: 0.5rem;
+  .user-photo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .circle {
+    width: 6px;
+    height: 6px;
   }
 }
-@media (max-width: 480px) {
-  .header {
-    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
-    align-items: flex-start; /* Alinear elementos al inicio */
-  }
 
-  .container-user {
-    flex-direction: column; /* Cambiar a columna en pantallas muy pequeñas */
-    align-items: center;
-    margin-top: 10px; /* Añadir margen superior */
-  }
 
-  .container-user .fa-user {
-    font-size: 1.2rem; /* Ajustar tamaño del icono */
-    padding-right: 0;
-    margin-bottom: 10px; /* Espacio entre icono y foto */
-  }
-}
 .paste-button .button {
   color: white; /* Color del texto del botón */
   padding: 1px; /* Espaciado interno del botón */
@@ -170,12 +285,12 @@ footer {
   display: block; /* Mostrar el contenido del menú desplegable al pasar el cursor sobre el botón */
 }
 /* Estilos para el botón del menú lateral*/
-.container .btn-menu {
+.btn-menu {
   float: left;
   line-height: 1px;
 }
 
-.container .btn-menu label {
+.btn-menu label {
   color: #fff;
   font-size: 30px;
   cursor: pointer;
@@ -268,15 +383,4 @@ footer {
   margin-top: 10px;
   text-align: center;
   font-weight: bold;
-}
-
-.tarjeta .alert {
-  padding: 15px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  border: 2px solid transparent;
-  border-radius: 30px;
-  color: whitesmoke;
-  background-color: #5c5959;
-  border-color: rgb(40, 116, 238);
 }
