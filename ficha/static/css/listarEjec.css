@@ -1,143 +1,178 @@
-.container{
+/* Contenedor principal */
+.container {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: auto;
-    background-color: #ffff;
+    background-color: #ffffff;
     border-radius: 20px;
-    transition: color 0.9s ease; 
+    transition: all 0.5s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
+
 /* Sección del Filtro */
 .filter-section {
     text-align: center;
-    padding: 10px;
-    font-size: 20px;
-    transition: color 0.9s ease;
-    color: rgb(6, 22, 100);
-    width: 90%; 
-    background-color: #ffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.726);
+    padding: 20px;
+    font-size: 22px;
+    color: #061664;
+    width: 90%;
+    background-color: #ffffff;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
-    margin: 16px auto; /* Centra la sección horizontalmente */
+    margin: 20px auto;
+    transition: transform 0.3s ease;
+}
+
+.filter-section:hover {
+    transform: scale(1.01);
 }
 
 .filter {
-    align-items: center;
-    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .filter label {
     font-size: 16px;
-    font-weight: bold;
-    color: black;
+    font-weight: 600;
+    color: #333;
 }
 
 .filter input {
-    padding: 8px;
+    padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 10px;
-    width: 200px;
+    width: 220px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter input:focus {
+    border-color: #061664;
+    box-shadow: 0 0 5px rgba(6, 22, 100, 0.5);
+    outline: none;
 }
 
 .filter button {
-    padding: 10px 20px;
-    background-color: rgb(6, 22, 100);
+    padding: 10px 25px;
+    background-color: #061664;
     color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Sección Tabla listado ejecutivos*/
+.filter button:hover {
+    background-color: #0a2a9c;
+    transform: scale(1.05);
+}
+
+/* Sección Tabla listado ejecutivos */
 .table-section {
     background-color: white;
-    padding: 10px;
+    padding: 20px;
     border-radius: 20px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.726);
-    margin-top: 10px;
-    width: 90%; 
-    margin: 1px auto; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    margin: 20px auto;
+    transition: transform 0.3s ease;
+}
+
+.table-section:hover {
+    transform: scale(1.01);
 }
 
 .executives-table {
-    width: 96%;
+    width: 100%;
     border-collapse: collapse;
-    margin: 0 auto;
     text-align: center;
-    font-size: 14px;
+    font-size: 15px;
     color: #333;
     border-radius: 10px;
+    overflow: hidden;
 }
 
 .executives-table th,
 .executives-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
 }
 
 .executives-table th {
-    background-color: rgb(6, 22, 100);
+    background-color: #061664;
     color: white;
     font-weight: bold;
 }
 
 .executives-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f4f6f8;
 }
 
 .executives-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e8f0fe;
+    transition: background-color 0.3s ease;
 }
 
 .executives-table td strong {
     font-weight: bold;
     color: #1f2a44;
 }
+
 /* Sección de Observaciones */
 .observations-section {
-    padding: 10px;
-    width: 90%; 
-    background-color: #ffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.726);
+    padding: 20px;
+    width: 90%;
+    background-color: #ffffff;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
-    margin: 10px auto; 
+    margin: 20px auto;
+    transition: transform 0.3s ease;
+}
+
+.observations-section:hover {
+    transform: scale(1.01);
 }
 
 .obs-table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
-    color: black;
+    color: #333;
 }
 
 .obs-table th {
-    background-color:rgb(6, 22, 100);
+    background-color: #061664;
     color: white;
     font-weight: bold;
-    padding: 10px;
+    padding: 12px;
 }
 
 .obs-table td {
-    padding: 6px; /* Reduce el espaciado entre celdas */
+    padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .obs-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f4f6f8;
 }
 
 .obs-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e8f0fe;
+    transition: background-color 0.3s ease;
 }
 
-/* Espaciado adicional para observaciones */
 .obs-table td:nth-child(4) {
-    white-space: pre-wrap; /* Permite texto en varias líneas */
-    line-height: 1.3; /* Mejor separación entre líneas */
-    font-size: 10px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    font-size: 12px;
 }
 
 /* Sección del Gráfico */
@@ -146,12 +181,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 90%; /* Ajusta el ancho según sea necesario */
+    width: 90%; 
     height: auto;
     background-color: #ffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.726);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
-    margin: 20px auto; /* Centra la sección horizontalmente */
+    margin: 20px auto; 
 
 }
 
@@ -163,8 +198,8 @@
 
 canvas {
     display: block !important;
-    width: auto !important; /* Ajusta el tamaño del canvas */
-    height: 300px !important; /* Ajusta el tamaño del canvas */
+    width: auto !important; 
+    height: 300px !important; 
     padding: 5px;
 }
 

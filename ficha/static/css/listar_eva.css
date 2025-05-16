@@ -29,7 +29,7 @@ h1 {
     font-size: 16px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 15px;
-    background: linear-gradient(135deg, #f0f4ff, #ffffff);
+    background-color: #07afe218;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     margin-bottom: 20px;
@@ -80,7 +80,7 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: scale(1);
+
 }
 
 .button:hover {
@@ -121,7 +121,6 @@ h1 {
     margin-bottom: 10px;
     padding: 20px;
     border-radius: 15px;
-    background: linear-gradient(135deg, #ffffff, #f0f4ff);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     text-decoration: none;
     color: #000000;
@@ -133,7 +132,6 @@ h1 {
 .menu a:hover {
     background: linear-gradient(135deg, #f9faff, #e6ecff);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
     border-color: #d0d8ff;
 }
 

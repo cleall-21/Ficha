@@ -1,15 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var limpiarBtn = document.getElementById('limpiarBtn');
-    var resul = document.getElementById('resul');
-    var sucursalForm = document.getElementById('sucursalForm');
-
-    if (limpiarBtn && resul && sucursalForm ) {
-        limpiarBtn.addEventListener('click', function() {
-            sucursalForm.reset(); // Restablece el formulario
-            resul.innerHTML = ''; // Limpia el contenido de resul
-        });
-
-    }
      // Función para cambiar el color del círculo según el estado del usuario
      function setUserStatus(status) {
         var circle = document.getElementById('user-status');
@@ -21,10 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
             circle.classList.add('inactive');
         }
     }
-
     // Simulación de cambio de estado del usuario
-    // Puedes reemplazar esto con la lógica real de tu aplicación
     setTimeout(function() {
-        setUserStatus('active'); // Cambia a 'inactive' para probar el estado inactivo
+        setUserStatus('active'); // 'inactive' para probar este estado
     }, 1000); 
 });

@@ -1,21 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .utils import filtro_form
 #Import Modelo de tablas User
 from django.contrib.auth.models import User
-from .models import UserProfile, Registro_materialidad, Evaluacion,EvaluacionFormalidad
+from .models import UserProfile, Registro_materialidad, Evaluacion
 # Import Libreria de autentificacion
 from django.contrib.auth import authenticate, logout, login as login_auth
 from django.views.decorators.csrf import csrf_protect
-from django.contrib import messages
 #Import decorators para impedir ingreso de paginas sin estar registrado
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
 import pandas as pd
-from .forms_evaluacion import (EvaluacionFormalidadForm,
-                    EvaluacionGestionOtorgaForm, EvaluacionDepuracionAntecedentesForm,EvaluacionIngresoDeDatosForm)
 from .forms_evaluacion import EvaluacionForm, FormalidadFormSet, GestionOtorgaFormSet, DepuracionAntecedentesFormSet, IngresoDeDatosFormSet
 from .forms import SucursalForm
+from django.core.paginator import Paginator
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 # Create your views here.
 def registro(request):
@@ -87,16 +86,70 @@ def logout_view(request):
 
 @login_required
 def base(request):
-    form, filtros = filtro_form(request)
-    return render(request, 'web/base.html', {'form': form, 'filtros': filtros})
+    return render(request, 'web/base.html')
 
-#def index(request):
-   ## form, filtros = filtro_form(request)
-   ## return render(request, 'web/index.html', {'form': form, 'filtros': filtros})
+@login_required
+def buscar_oportunidad(request):
+    if request.method == 'POST':
+        form = SucursalForm(request.POST)
+        if form.is_valid():
+            codigo_suc = form.cleaned_data['codigo_suc']
+            nombre_ejecutivo = form.cleaned_data.get('nombre_ejecutivo')
+            fecha_inicio = form.cleaned_data.get('fecha_inicio')
+            fecha_fin = form.cleaned_data.get('fecha_fin')
+
+            # Si no se seleccionó nombre_ejecutivo, devolvemos solo la lista de ejecutivos
+            if not nombre_ejecutivo:
+                queryset = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
+                if fecha_inicio and fecha_fin:
+                    queryset = queryset.filter(log_fecha_registro__range=[fecha_inicio, fecha_fin])
+                nombres = queryset.values_list('nombre_ejecutivo', flat=True).distinct()
+                return JsonResponse({'ejecutivos': list(nombres)})
+
+            # Si hay nombre_ejecutivo, hacemos la búsqueda completa
+            filtros = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
+            if fecha_inicio and fecha_fin:
+                filtros = filtros.filter(log_fecha_registro__range=[fecha_inicio, fecha_fin])
+            if nombre_ejecutivo:
+                filtros = filtros.filter(nombre_ejecutivo=nombre_ejecutivo)
+
+            # Paginación
+            page_number = request.GET.get('page', 1)
+            paginator = Paginator(filtros, 5)
+            page_obj = paginator.get_page(page_number)
+
+            html = render_to_string('web/resultados.html', {
+                'filtros': page_obj,
+                'paginator': paginator,
+                'page_obj': page_obj
+            })
+
+            return JsonResponse({'html': html})
+        else:
+            return JsonResponse({'errors': form.errors}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @login_required
 def index(request):
-    if request.method == 'POST':
+    filtros = None
+    sucursal_form = SucursalForm(request.POST or None)
+
+    if request.method == 'POST' and 'codigo_suc' in request.POST:
+        if sucursal_form.is_valid():
+            codigo_suc = sucursal_form.cleaned_data['codigo_suc']
+            nombre_ejecutivo = sucursal_form.cleaned_data.get('nombre_ejecutivo')
+            fecha_inicio = sucursal_form.cleaned_data.get('fecha_inicio')
+            fecha_fin = sucursal_form.cleaned_data.get('fecha_fin')
+
+            filtros = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
+            if fecha_inicio and fecha_fin:
+                filtros = filtros.filter(fecha__range=[fecha_inicio, fecha_fin])
+            if nombre_ejecutivo:
+                filtros = filtros.filter(nombre_ejecutivo=nombre_ejecutivo)
+
+    # Formularios de evaluación
+    if request.method == 'POST' and 'codigo_suc' not in request.POST:
         evaluacion_form = EvaluacionForm(request.POST)
         formalidad_formset = FormalidadFormSet(request.POST, instance=evaluacion_form.instance)
         gestion_otorga_formset = GestionOtorgaFormSet(request.POST, instance=evaluacion_form.instance)
@@ -105,7 +158,7 @@ def index(request):
 
         if evaluacion_form.is_valid() and formalidad_formset.is_valid() and gestion_otorga_formset.is_valid() and depuracion_antecedentes_formset.is_valid() and ingreso_datos_formset.is_valid():
             evaluacion = evaluacion_form.save(commit=False)
-            evaluacion.user = request.user  # Asignar el usuario actual a la evaluación
+            evaluacion.user = request.user
             evaluacion.save()
 
             formalidad_formset.instance = evaluacion
@@ -121,16 +174,6 @@ def index(request):
             ingreso_datos_formset.save()
 
             return redirect('index')
-        else:
-            return render(request, 'web/index.html',
-                          {
-                'evaluacion_form': evaluacion_form,
-                'formalidad_formset': formalidad_formset,
-                'gestion_otorga_formset': gestion_otorga_formset,
-                'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
-                'ingreso_datos_formset': ingreso_datos_formset,
-                'error': 'Formulario no válido'
-            })
     else:
         evaluacion_form = EvaluacionForm()
         formalidad_formset = FormalidadFormSet(instance=evaluacion_form.instance)
@@ -138,18 +181,15 @@ def index(request):
         depuracion_antecedentes_formset = DepuracionAntecedentesFormSet(instance=evaluacion_form.instance)
         ingreso_datos_formset = IngresoDeDatosFormSet(instance=evaluacion_form.instance)
 
-        return render(request, 'web/index.html', 
-            {
-            'evaluacion_form': evaluacion_form,
-            'formalidad_formset': formalidad_formset,
-            'gestion_otorga_formset': gestion_otorga_formset,
-            'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
-            'ingreso_datos_formset': ingreso_datos_formset
-        })
-
-from django.core.paginator import Paginator
-from django.db.models import Q
-
+    return render(request, 'web/index.html', {
+        'form': sucursal_form,
+        'filtros': filtros,
+        'evaluacion_form': evaluacion_form,
+        'formalidad_formset': formalidad_formset,
+        'gestion_otorga_formset': gestion_otorga_formset,
+        'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
+        'ingreso_datos_formset': ingreso_datos_formset
+    })
 @login_required
 def listar_evaluaciones(request):
     evaluaciones = Evaluacion.objects.filter(user=request.user)

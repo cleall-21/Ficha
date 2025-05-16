@@ -9,26 +9,51 @@
 {% block contenido %}
     <div class="evaluacion">
         <div class="resultados">
-            <form method="POST" id="sucursalForm" class="form2" >
-            <h2>Busqueda de oportunidad</h2>
+            <form method="POST" id="sucursalForm" class="form2">
+                <h2>Busqueda de oportunidad</h2>
                 {% csrf_token %}
-                <label for="fechaInicio">Fecha Inicio:</label>
-                <input type="date" id="fechaInicio" name="fechaInicio">
-                <label for="fechaFin">Fecha Fin:</label>
-                <input type="date" id="fechaFin" name="fechaFin">
+                <!-- Errores generales del formulario -->
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {% for error in form.non_field_errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <label for="{{ form.fecha_inicio.id_for_label }}">Fecha Inicio:</label>
+                {{ form.fecha_inicio }}
+                {% if form.fecha_inicio.errors %}
+                    <div class="field-error">{{ form.fecha_inicio.errors.0 }}</div>
+                {% endif %}
+                <label for="{{ form.fecha_fin.id_for_label }}">Fecha Fin:</label>
+                {{ form.fecha_fin }}
+                {% if form.fecha_fin.errors %}
+                    <div class="field-error">{{ form.fecha_fin.errors.0 }}</div>
+                {% endif %}
                 <div class="input">
                     <label for="{{ form.codigo_suc.id_for_label }}">Código Oficina:</label>
                     {{ form.codigo_suc }}
+                    {% if form.codigo_suc.errors %}
+                        <div class="field-error">{{ form.codigo_suc.errors.0 }}</div>
+                    {% endif %}
                 </div>
                 <div class="input">
-                    <label for="{{ form.nombre_ejecutivo.id_for_label }}">RUT:</label>
+                    <label for="{{ form.nombre_ejecutivo.id_for_label }}">Nombre Ejecutivo:</label>
                     {{ form.nombre_ejecutivo }}
+                    {% if form.nombre_ejecutivo.errors %}
+                        <div class="field-error">{{ form.nombre_ejecutivo.errors.0 }}</div>
+                    {% endif %}
                 </div>
                 <div class="botones">
                     <button type="reset" class="button limpia">Limpiar</button>
-                    <button  class="button buscar">Buscar Oportunidad</button>
+                    <button type="submit" class="button buscar">Buscar Oportunidad</button>
                 </div>
             </form>
+           <div id="loader" style="display: none;">
+                <img src="{% static 'img/loader.gif' %}" alt="Cargando..." >
+                <p id="loader-text">Buscando oportunidades...</p>
+            </div>
+
             <div id="resul">
                 {% include 'web/resultados.html' %}
             </div>

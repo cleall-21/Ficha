@@ -1,7 +1,6 @@
 /* Contenedor principal */
 .evaluacion {
     display: flex;
-    position: relative;
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
@@ -20,7 +19,7 @@
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
 .container {
@@ -30,7 +29,7 @@
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
 /* Títulos */
@@ -48,7 +47,8 @@ h2 {
     transition: color 0.3s ease;
 }
 
-.resultados input {
+.resultados input,select {
+    width: 90%;
     margin-top: 8px;
     padding: 12px 16px;
     border: 2px solid #d0d0e1;
@@ -68,6 +68,29 @@ h2 {
 .resultados input:hover {
     border-color: #1e3c72;
 }
+/*Estilos resultado Busqueda*/
+.lista-resultados {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.item-resultado {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.item-resultado strong {
+    color: #333;
+}
+
+
 /*Estilos botones busqueda*/
 .botones {
     display: flex;
@@ -85,7 +108,6 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: scale(1);
 }
 .button:hover {
     transform: scale(1.05);
@@ -219,11 +241,6 @@ h2 {
     background-color: #ffffff;
 }
 
-/* Animación */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
 /*Estilos botones crear evaluacion*/
 .top-buttons {
@@ -240,7 +257,6 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transform: scale(1);
 }
 .buttons:hover {
     transform: scale(1.05);
@@ -265,4 +281,42 @@ h2 {
 
 .clear:hover {
     background: linear-gradient(135deg, #5c5f73, #888ba1);
+}
+/*estilo gif de carga busqueda opor*/
+#loader {
+    width: 100px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+    margin-left: 80px;
+}
+
+#loader.visible {
+    opacity: 1;
+}
+#loader-text {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+    margin-left: 50px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.3; transform: scale(1); }
+}
+
+.field-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+
+.form-errors {
+    background-color: #ffe6e6;
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 15px;
 }

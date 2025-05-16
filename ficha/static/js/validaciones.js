@@ -438,5 +438,4 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mostrar la sección anterior
         document.getElementById(previousSection).style.display = "block";
     }
-        
 });

@@ -1,34 +1,61 @@
 from django import forms
 from .models import Registro_materialidad
-
 class SucursalForm(forms.Form):
-    codigo_suc = forms.IntegerField(label='Código Sucursal:')
-    nombre_ejecutivo = forms.ModelChoiceField(
-        queryset=Registro_materialidad.objects.none(),  # Inicialmente vacío
+    fecha_inicio = forms.DateField(
+        label='Fecha Inicio:',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        error_messages={'invalid': 'Ingrese una fecha válida.'}
+    )
+    fecha_fin = forms.DateField(
+        label='Fecha Fin:',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        error_messages={'invalid': 'Ingrese una fecha válida.'}
+    )
+    codigo_suc = forms.IntegerField(
+        label='Código Sucursal:',
+        error_messages={
+            'required': 'Este campo es obligatorio.',
+            'invalid': 'Debe ser un número válido.'
+        }
+    )
+    nombre_ejecutivo = forms.ChoiceField(
+        choices=[],
         label='Nombre Ejecutivo',
         required=False
     )
-    fecha_inicio = forms.DateField(label='Fecha Inicio:', required=False)
-    fecha_fin = forms.DateField(label='Fecha Fin:', required=False)
 
     def __init__(self, *args, **kwargs):
         super(SucursalForm, self).__init__(*args, **kwargs)
-        if 'codigo_suc' in self.data:
+        data = self.data or self.initial
+        codigo_suc = data.get('codigo_suc')
+        fecha_inicio = data.get('fecha_inicio')
+        fecha_fin = data.get('fecha_fin')
+
+        if codigo_suc:
             try:
-                codigo_suc = int(self.data.get('codigo_suc'))
-                fecha_inicio = self.data.get('fecha_inicio')
-                fecha_fin = self.data.get('fecha_fin')
                 queryset = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
                 if fecha_inicio and fecha_fin:
-                    queryset = queryset.filter(fecha__range=[fecha_inicio, fecha_fin])
-                self.fields['nombre_ejecutivo'].queryset = queryset.values_list('nombre_ejecutivo', flat=True).distinct()
+                    queryset = queryset.filter(log_fecha_registro__range=[fecha_inicio, fecha_fin])
+                nombres = queryset.values_list('nombre_ejecutivo', flat=True).distinct()
+                print("Ejecutivos encontrados:", list(nombres))
+                self.fields['nombre_ejecutivo'].choices = [('', '---------')] + [(n, n) for n in nombres]
             except (ValueError, TypeError):
-                pass  # Manejar el caso en que codigo_suc no sea un entero válido
-        elif self.initial.get('codigo_suc'):
-            codigo_suc = self.initial.get('codigo_suc')
-            fecha_inicio = self.initial.get('fecha_inicio')
-            fecha_fin = self.initial.get('fecha_fin')
-            queryset = Registro_materialidad.objects.filter(codigo_suc=codigo_suc)
-            if fecha_inicio and fecha_fin:
-                queryset = queryset.filter(fecha__range=[fecha_inicio, fecha_fin])
-            self.fields['nombre_ejecutivo'].queryset = queryset.values_list('nombre_ejecutivo', flat=True).distinct()
+                pass
+
+    def clean_codigo_suc(self):
+        codigo = self.cleaned_data.get('codigo_suc')
+        if codigo <= 0:
+            raise forms.ValidationError("El código de sucursal debe ser un número positivo.")
+        if not Registro_materialidad.objects.filter(codigo_suc=codigo).exists():
+            raise forms.ValidationError("No existe una sucursal con ese código.")
+        return codigo
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_inicio = cleaned_data.get('fecha_inicio')
+        fecha_fin = cleaned_data.get('fecha_fin')
+
+        if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
+            raise forms.ValidationError("La fecha de inicio no puede ser posterior a la fecha de fin.")

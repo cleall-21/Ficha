@@ -1,17 +1,30 @@
 {% if filtros %}
     <h2>Resultados:</h2>
-    <ul>
+    <ul class="lista-resultados">
         {% for filtro in filtros %}
-        <li>
-            Rut: {{ filtro.rut }}-{{filtro.dv}}<br>
-            Fecha: {{ filtro.log_fecha_registro }}<br>
-            Login Ejecutivo: {{ filtro.login_creador }}<br>
-            Sucursal: {{ filtro.nombre_suc }}<br>
-            Producto Evaluado: {{ filtro.prod_eval }}<br>
-            Monto Oferta: ${{ filtro.monto_oferta }}<br>
-            Proceso credito: {{filtro.proceso_credito}}<br>
-            Estado: {{filtro.estado}}<br>
+        <li class="item-resultado">
+            <strong>RUT:</strong> {{ filtro.rut }}-{{ filtro.dv }}<br>
+            <strong>Fecha:</strong> {{ filtro.log_fecha_registro}}<br>
+            <strong>Login Ejecutivo:</strong> {{ filtro.login_creador }}<br>
+            <strong>Sucursal:</strong> {{ filtro.nombre_suc }}<br>
+            <strong>Producto Evaluado:</strong> {{ filtro.prod_eval }}<br>
+            <strong>Monto Oferta:</strong> ${{ filtro.monto_oferta }}<br>
+            <strong>Proceso Crédito:</strong> {{ filtro.proceso_credito }}<br>
+            <strong>Estado:</strong> {{ filtro.estado }}<br>
         </li>
         {% endfor %}
     </ul>
+
+    {% if page_obj.has_other_pages %}
+    <div class="paginacion">
+        {% if page_obj.has_previous %}
+            <a href="#" class="pagina" data-page="{{ page_obj.previous_page_number }}">« Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="#" class="pagina" data-page="{{ page_obj.next_page_number }}">Siguiente »</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% else %}
 {% endif %}

@@ -1,0 +1,1 @@
+/*Aca tendremos la logica para calcular la nota y la clasificacion de la oportunidad*/
