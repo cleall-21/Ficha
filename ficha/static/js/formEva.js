@@ -103,9 +103,10 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         const formData = new FormData(form);
         cargarResultados(formData);
+        activarPaginacion();
     });
-
-    activarPaginacion();
+});
+document.addEventListener('DOMContentLoaded', function () {
     var tabs = document.querySelectorAll('.nav-link');
     var tabContents = document.querySelectorAll('.tab-pane');
 

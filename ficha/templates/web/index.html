@@ -23,25 +23,25 @@
                 <label for="{{ form.fecha_inicio.id_for_label }}">Fecha Inicio:</label>
                 {{ form.fecha_inicio }}
                 {% if form.fecha_inicio.errors %}
-                    <div class="field-error">{{ form.fecha_inicio.errors.0 }}</div>
+                    <div class="field-error">{{ form.fecha_inicio.errors }}</div>
                 {% endif %}
                 <label for="{{ form.fecha_fin.id_for_label }}">Fecha Fin:</label>
                 {{ form.fecha_fin }}
                 {% if form.fecha_fin.errors %}
-                    <div class="field-error">{{ form.fecha_fin.errors.0 }}</div>
+                    <div class="field-error">{{ form.fecha_fin.errors}}</div>
                 {% endif %}
                 <div class="input">
                     <label for="{{ form.codigo_suc.id_for_label }}">Código Oficina:</label>
                     {{ form.codigo_suc }}
                     {% if form.codigo_suc.errors %}
-                        <div class="field-error">{{ form.codigo_suc.errors.0 }}</div>
+                        <div class="field-error">{{ form.codigo_suc.errors }}</div>
                     {% endif %}
                 </div>
                 <div class="input">
                     <label for="{{ form.nombre_ejecutivo.id_for_label }}">Nombre Ejecutivo:</label>
                     {{ form.nombre_ejecutivo }}
                     {% if form.nombre_ejecutivo.errors %}
-                        <div class="field-error">{{ form.nombre_ejecutivo.errors.0 }}</div>
+                        <div class="field-error">{{ form.nombre_ejecutivo.errors}}</div>
                     {% endif %}
                 </div>
                 <div class="botones">

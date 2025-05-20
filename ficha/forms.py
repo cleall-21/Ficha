@@ -39,7 +39,7 @@ class SucursalForm(forms.Form):
                 if fecha_inicio and fecha_fin:
                     queryset = queryset.filter(log_fecha_registro__range=[fecha_inicio, fecha_fin])
                 nombres = queryset.values_list('nombre_ejecutivo', flat=True).distinct()
-                print("Ejecutivos encontrados:", list(nombres))
+                ##print("Ejecutivos encontrados:", list(nombres))
                 self.fields['nombre_ejecutivo'].choices = [('', '---------')] + [(n, n) for n in nombres]
             except (ValueError, TypeError):
                 pass

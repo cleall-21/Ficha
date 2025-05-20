@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Evaluacion,EvaluacionFormalidad,EvaluacionGestionOtorga,EvaluacionDepuracionAntecedentes,EvaluacionIngresoDeDatos
+from .models import Errores_agravante
 class EvaluacionForm(forms.ModelForm):
     class Meta:
         model = Evaluacion
@@ -24,13 +25,24 @@ class EvaluacionFormalidadForm(forms.ModelForm):
             'tipo_error_acreditacion_ingresos',
             'observacion_acreditacion',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Aplicar filtros por ítem
+        self.fields['tipo_error_verificacion_laboral'].queryset = Errores_agravante.objects.filter(item='verificacion_laboral')# type: ignore
+        self.fields['tipo_error_estado_situacion'].queryset = Errores_agravante.objects.filter(item='estado_situacion')# type: ignore
+        self.fields['tipo_error_acreditacion_ingresos'].queryset = Errores_agravante.objects.filter(item='acreditacion_ingresos')# type: ignore
+
 class EvaluacionGestionOtorgaForm(forms.ModelForm):
     class Meta:
         model = EvaluacionGestionOtorga
         fields = [
             'respuesta_atribuciones',
+            'tipo_error_atribuciones',
             'observaciones_revision_credito',
             'respuesta_contribucion_garantia',
+            'tipo_error_contribucion_garantia',
             'observaciones_contribucion_garantia',
             'respuesta_condiciones_aprobacion',
             'tipo_error_condiciones_aprobacion',
@@ -41,11 +53,20 @@ class EvaluacionGestionOtorgaForm(forms.ModelForm):
             'respuesta_deudas_vinculadas',
             'observacion_res_deuda_vincu',
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Aplicar filtros por ítem
+        self.fields['tipo_error_atribuciones'].queryset = Errores_agravante.objects.filter(item='error_atribuciones')# type: ignore
+        self.fields['tipo_error_contribucion_garantia'].queryset = Errores_agravante.objects.filter(item='contribucion_garantia')# type: ignore
+        self.fields['tipo_error_condiciones_aprobacion'].queryset = Errores_agravante.objects.filter(item='condiciones_aprobacion')# type: ignore
+        self.fields['tipo_error_cambio_evaAT'].queryset = Errores_agravante.objects.filter(item='cambio_evaAT')# type: ignore
 class EvaluacionDepuracionAntecedentesForm(forms.ModelForm):
     class Meta:
         model = EvaluacionDepuracionAntecedentes
         fields = [
             'respuesta_ingresos_mensuales',
+            'tipo_error_ingresos_mensuales',
             'obs_ingresos_mensuales_dice',
             'obs_ingresos_mensuales_debe',
             'observacion_ingresos_mensuales',
@@ -70,6 +91,7 @@ class EvaluacionDepuracionAntecedentesForm(forms.ModelForm):
             'obs_otros_egre_debe',
             'observacion_otros_egre',
             'respuesta_renegociado',
+            'tipo_error_monto_renegociado',
             'obs_renegociado_dice',
             'obs_renegociado_debe',
             'observacion_renegociado',
@@ -98,6 +120,12 @@ class EvaluacionDepuracionAntecedentesForm(forms.ModelForm):
             'obs_monto_compra_sbif_debe',
             'observacion_monto_compra_sbif',
         ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Aplicar filtros por ítem
+        self.fields['tipo_error_ingresos_mensuales'].queryset = Errores_agravante.objects.filter(item='ingresos_mensuales')# type: ignore
+        self.fields['tipo_error_monto_renegociado'].queryset = Errores_agravante.objects.filter(item='monto_renegociado')# type: ignore
+
 class EvaluacionIngresoDeDatosForm(forms.ModelForm):
     class Meta:
         model = EvaluacionIngresoDeDatos

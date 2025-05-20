@@ -1,4 +1,6 @@
 {
     "editor.cursorSmoothCaretAnimation": "on",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "standard"
 }

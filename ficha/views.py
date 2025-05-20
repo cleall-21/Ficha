@@ -48,7 +48,7 @@ def registro(request):
             # Autenticar y loguear al usuario
             us = authenticate(request, username=username, password=password)
             if us is not None:
-                login(request, us)
+                login(request, us) # type: ignore
                 return redirect('index')  # Redirigir a la página de inicio o dashboard
             else:
                 mensaje = "Error en la autenticación"
@@ -115,7 +115,7 @@ def buscar_oportunidad(request):
 
             # Paginación
             page_number = request.GET.get('page', 1)
-            paginator = Paginator(filtros, 5)
+            paginator = Paginator(filtros, 3)
             page_obj = paginator.get_page(page_number)
 
             html = render_to_string('web/resultados.html', {
@@ -204,7 +204,7 @@ def listar_evaluaciones(request):
         evaluaciones = evaluaciones.filter(clasificacion__icontains=sucursal)  # Ajusta si tienes un campo específico para sucursal
 
     # Paginación
-    paginator = Paginator(evaluaciones, 5)  # 5 por página
+    paginator = Paginator(evaluaciones, 3)  # 3 por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
