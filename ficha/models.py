@@ -43,54 +43,93 @@ class Evaluacion(models.Model):
     id_evaluacion = models.AutoField(primary_key=True)
     tipo_cliente = models.CharField(max_length=10, blank=True, choices=TIPOS)
     fecha = models.DateField()
-    nota_final = models.DecimalField(max_digits=5, decimal_places=2)
-    clasificacion = models.CharField(max_length=50)
+    nota_final = models.DecimalField(max_digits=5, decimal_places=1)
+    clasificacion = models.CharField(max_length=15)
+    cantidad_errores = models.PositiveIntegerField(default=0)  #  Nuevo campo
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return f"Evaluación {self.id_evaluacion}, Fecha: {self.fecha} - {self.user}"
 
     def calcular_nota_final(self):
-        nota_minima = 5.0  # Valor base máximo
+        nota_minima = 5.0  # Nota más alta
+        errores_agregados = False
 
         # Formalidad
-        for detalle in self.formalidad.all(): # type: ignore
-
+        for detalle in self.formalidad.all():  # type: ignore
             notas = detalle.get_notas_agravantes()
             if notas:
+                errores_agregados = True
                 nota_minima = min(nota_minima, *notas)
 
         # Gestión Otorga
-        for detalle in self.gestion_otorga.all():# type: ignore
+        for detalle in self.gestion_otorga.all():  # type: ignore
             notas = detalle.get_notas_agravantes()
             if notas:
+                errores_agregados = True
                 nota_minima = min(nota_minima, *notas)
 
         # Depuración de Antecedentes
-        for detalle in self.depuracion_antecedentes.all():# type: ignore
+        for detalle in self.depuracion_antecedentes.all():  # type: ignore
             notas = detalle.get_notas_agravantes()
             if notas:
+                errores_agregados = True
                 nota_minima = min(nota_minima, *notas)
 
-        # Ingreso de Datos no tiene errores agravantes por ahora
+        # Si no hay errores agravantes, calcular nota por cantidad de errores
+        if not errores_agregados:
+            self.cantidad_errores = self.contar_errores_totales()
+            nota_minima = self.obtener_nota_por_errores(self.cantidad_errores)
+
         self.nota_final = nota_minima
         self.clasificacion = self.obtener_clasificacion(nota_minima)
         self.save()
 
+
+    def contar_errores_totales(self):
+        total_errores = 0
+        
+        for detalle in self.formalidad.all():  # type: ignore
+            total_errores += detalle.contar_errores()
+
+        for detalle in self.gestion_otorga.all():  # type: ignore
+            total_errores += detalle.contar_errores()
+
+        for detalle in self.depuracion_antecedentes.all():  # type: ignore
+            total_errores += detalle.contar_errores()
+
+        for detalle in self.ingreso_datos.all():  # type: ignore
+            total_errores += detalle.contar_errores()
+
+        return total_errores
+
+    def obtener_nota_por_errores(self, cantidad_errores):
+        if cantidad_errores == 0:
+            return 5
+        elif cantidad_errores <=2:
+            return 4.5 
+        elif cantidad_errores == 3:
+            return 3.5
+        elif cantidad_errores == 4:
+            return 3
+        elif cantidad_errores == 5:
+            return 2.5
+        else:
+            return 1
+
     def obtener_clasificacion(self, nota):
-        if nota < 2:
+        if nota < 2.5:
             return "Deficiente"
         elif nota < 3:
             return "Insuficiente"
-        elif nota < 4:
+        elif nota < 3.5:
             return "Regular"
-        elif nota < 4.5:
+        elif nota < 4:
             return "Aceptable"
         elif nota < 5:
             return "Destacado"
         else:
             return "Excelente"
-
-
 class EvaluacionFormalidad(models.Model):
     id_evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='formalidad')
     # Verificación Laboral
@@ -102,7 +141,7 @@ class EvaluacionFormalidad(models.Model):
         blank=True,
         related_name='errores_verificacion_laboral'
     )
-    observacion_verificacion = models.CharField(max_length=100, blank=True)
+    observacion_verificacion = models.CharField(max_length=350, blank=True)
     # Estado de Situación
     respuesta_estado_situacion = models.CharField(max_length=10, choices=RESPUESTAS)
     tipo_error_estado_situacion = models.ForeignKey(
@@ -112,7 +151,7 @@ class EvaluacionFormalidad(models.Model):
         blank=True,
         related_name='errores_estado_situacion'
     )
-    observacion_estado = models.CharField(max_length=100, blank=True)
+    observacion_estado = models.CharField(max_length=350, blank=True)
     # Acreditación de Ingresos
     respuesta_acreditacion_ingresos = models.CharField(max_length=10, choices=RESPUESTAS)
     tipo_error_acreditacion_ingresos = models.ForeignKey(
@@ -122,10 +161,19 @@ class EvaluacionFormalidad(models.Model):
         blank=True,
         related_name='errores_acreditacion_ingresos'
     )
-    observacion_acreditacion = models.CharField(max_length=100, blank=True)
+    observacion_acreditacion = models.CharField(max_length=350, blank=True)
 
     def __str__(self):
         return f"Evaluación Formalidad - {self.id_evaluacion}"
+    def contar_errores(self):
+        errores = 0
+        respuestas = [
+            self.respuesta_verificacion_laboral,
+            self.respuesta_estado_situacion,
+            self.respuesta_acreditacion_ingresos,
+        ]
+        errores = sum(1 for r in respuestas if r == 'Error')
+        return errores
 
     def get_notas_agravantes(self):
         notas = []
@@ -147,7 +195,7 @@ class EvaluacionGestionOtorga(models.Model):
         blank=True,
         related_name='errores_atribuciones'
     )
-    observaciones_revision_credito = models.CharField(max_length=100, blank=True)
+    observaciones_revision_credito = models.CharField(max_length=350, blank=True)
     # Contribución Garantías y/o Aval
     respuesta_contribucion_garantia = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     tipo_error_contribucion_garantia = models.ForeignKey(
@@ -157,7 +205,7 @@ class EvaluacionGestionOtorga(models.Model):
         blank=True,
         related_name='errores_contribucion_garantia'
     )
-    observaciones_contribucion_garantia = models.CharField(max_length=100, blank=True)
+    observaciones_contribucion_garantia = models.CharField(max_length=350, blank=True)
     # Condiciones de Aprobación
     respuesta_condiciones_aprobacion = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     tipo_error_condiciones_aprobacion = models.ForeignKey(
@@ -167,7 +215,7 @@ class EvaluacionGestionOtorga(models.Model):
         blank=True,
         related_name='errores_condiciones_aprobacion'
     )
-    observacion_condicion_aprob = models.CharField(max_length=100, blank=True)
+    observacion_condicion_aprob = models.CharField(max_length=350, blank=True)
     # Cambio Resultado Evaluación Automática
     respuesta_cambio_evaAT = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     tipo_error_cambio_evaAT = models.ForeignKey(
@@ -177,16 +225,31 @@ class EvaluacionGestionOtorga(models.Model):
         blank=True,
         related_name='errores_cambio_evaAT'
     )
-    observacion_cambioEva = models.CharField(max_length=100, blank=True)
+    observacion_cambioEva = models.CharField(max_length=350, blank=True)
     # Deudas Vinculadas
     respuesta_deudas_vinculadas = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
-    observacion_res_deuda_vincu = models.CharField(max_length=100, blank=True)
+    observacion_res_deuda_vincu = models.CharField(max_length=350, blank=True)
 
     def __str__(self):
         return f"Gestión Otorgamiento de evaluación {self.id_evaluacion}"
-
+    def contar_errores(self):
+        errores = 0
+        respuestas = [
+            self.respuesta_atribuciones,
+            self.respuesta_contribucion_garantia,
+            self.respuesta_condiciones_aprobacion,
+            self.respuesta_cambio_evaAT,
+            self.respuesta_deudas_vinculadas,
+        ]
+        errores = sum(1 for r in respuestas if r == 'Error')
+        return errores
+    
     def get_notas_agravantes(self):
         notas = []
+        if self.tipo_error_atribuciones:
+            notas.append(self.tipo_error_atribuciones.nota)
+        if self.tipo_error_contribucion_garantia:
+            notas.append(self.tipo_error_contribucion_garantia.nota)
         if self.tipo_error_condiciones_aprobacion:
             notas.append(self.tipo_error_condiciones_aprobacion.nota)
         if self.tipo_error_cambio_evaAT:
@@ -210,27 +273,27 @@ class EvaluacionDepuracionAntecedentes(models.Model):
     respuesta_activo = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_activo_dice = models.CharField(max_length=50, blank=True)
     obs_activo_debe = models.CharField(max_length=50, blank=True)
-    observacion_activo = models.CharField(max_length=100, blank=True)
+    observacion_activo = models.CharField(max_length=350, blank=True)
     # Dividendo BCH (actual y sin cursar) o Gasto Vivienda
     respuesta_dividendo_BCH = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_dividendo_BCH_dice = models.CharField(max_length=50, blank=True)
     obs_dividendo_BCH_debe = models.CharField(max_length=50, blank=True)
-    observacion_dividendo_BCH = models.CharField(max_length=100, blank=True)
+    observacion_dividendo_BCH = models.CharField(max_length=350, blank=True)
     # Arriendos Pagados
     respuesta_arriendos = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_arriendos_dice = models.CharField(max_length=50, blank=True)
     obs_arriendos_debe = models.CharField(max_length=50, blank=True)
-    observacion_arriendos = models.CharField(max_length=100, blank=True)
+    observacion_arriendos = models.CharField(max_length=350, blank=True)
     # Cuota Préstamo Empleador y/o CCAF
     respuesta_cuota_prestamo = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_cuota_prestamo_dice = models.CharField(max_length=50, blank=True)
     obs_cuota_prestamo_debe = models.CharField(max_length=50, blank=True)
-    observacion_cuota_prestamo = models.CharField(max_length=100, blank=True)
+    observacion_cuota_prestamo = models.CharField(max_length=350, blank=True)
     # Otros Egresos
     respuesta_otros_egre = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_otros_egre_dice = models.CharField(max_length=50, blank=True)
     obs_otros_egre_debe = models.CharField(max_length=50, blank=True)
-    observacion_otros_egre = models.CharField(max_length=100, blank=True)
+    observacion_otros_egre = models.CharField(max_length=350, blank=True)
     # Monto a Reestructurar Renegociado Corto Plazo y Largo Plazo
     respuesta_renegociado = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     tipo_error_monto_renegociado = models.ForeignKey(
@@ -242,41 +305,60 @@ class EvaluacionDepuracionAntecedentes(models.Model):
     )
     obs_renegociado_dice = models.CharField(max_length=50, blank=True)
     obs_renegociado_debe = models.CharField(max_length=50, blank=True)
-    observacion_renegociado = models.CharField(max_length=100, blank=True)
+    observacion_renegociado = models.CharField(max_length=350, blank=True)
     # Cuota Banco CP (Compra Cartera)
     respuesta_cuota_cp = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_cuota_cp_dice = models.CharField(max_length=50, blank=True)
     obs_cuota_cp_debe = models.CharField(max_length=50, blank=True)
-    observacion_cuota_cp = models.CharField(max_length=100, blank=True)
+    observacion_cuota_cp = models.CharField(max_length=350, blank=True)
     # Cuota Compra OOII (Compra Cartera)
     respuesta_cuota_ooii = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_cuota_ooii_dice = models.CharField(max_length=50, blank=True)
     obs_cuota_ooii_debe = models.CharField(max_length=50, blank=True)
-    observacion_cuota_ooii = models.CharField(max_length=100, blank=True)
+    observacion_cuota_ooii = models.CharField(max_length=350, blank=True)
     # Monto Compra Banco LP (Compra Cartera)
     respuesta_monto_compra_lp = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_monto_compra_lp_dice = models.CharField(max_length=50, blank=True)
     obs_monto_compra_lp_debe = models.CharField(max_length=50, blank=True)
-    observacion_monto_compra_lp = models.CharField(max_length=100, blank=True)
+    observacion_monto_compra_lp = models.CharField(max_length=350, blank=True)
     # Monto Compra Banco CP (Compra Cartera)
     respuesta_monto_compra_cp = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_monto_compra_cp_dice = models.CharField(max_length=50, blank=True)
     obs_monto_compra_cp_debe = models.CharField(max_length=50, blank=True)
-    observacion_monto_compra_cp = models.CharField(max_length=100, blank=True)
+    observacion_monto_compra_cp = models.CharField(max_length=350, blank=True)
     # Monto Compra OOII (Compra Cartera)
     respuesta_monto_compra_ooii = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_monto_compra_ooii_dice = models.CharField(max_length=50, blank=True)
     obs_monto_compra_ooii_debe = models.CharField(max_length=50, blank=True)
-    observacion_monto_compra_ooii = models.CharField(max_length=100, blank=True)
+    observacion_monto_compra_ooii = models.CharField(max_length=350, blank=True)
     # Monto Compra SBIF (Compra Cartera)
     respuesta_monto_compra_sbif = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_monto_compra_sbif_dice = models.CharField(max_length=50, blank=True)
     obs_monto_compra_sbif_debe = models.CharField(max_length=50, blank=True)
-    observacion_monto_compra_sbif = models.CharField(max_length=100, blank=True)
+    observacion_monto_compra_sbif = models.CharField(max_length=350, blank=True)
 
     def __str__(self):
         return f"Depuración de Antecedentes de evaluación {self.id_evaluacion}"
-
+    def contar_errores(self):
+        errores = 0
+        respuestas = [
+            self.respuesta_ingresos_mensuales,
+            self.respuesta_activo,
+            self.respuesta_dividendo_BCH,
+            self.respuesta_arriendos,
+            self.respuesta_cuota_prestamo,
+            self.respuesta_otros_egre,
+            self.respuesta_renegociado,
+            self.respuesta_cuota_cp,
+            self.respuesta_cuota_ooii,
+            self.respuesta_monto_compra_lp,
+            self.respuesta_monto_compra_cp,
+            self.respuesta_monto_compra_ooii,
+            self.respuesta_monto_compra_sbif,
+        ]
+        errores = sum(1 for r in respuestas if r == 'Error')
+        return errores
+    
     def get_notas_agravantes(self):
         notas = []
         if self.tipo_error_ingresos_mensuales:
@@ -290,60 +372,76 @@ class EvaluacionIngresoDeDatos(models.Model):
     respuesta_actividad = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_actividad_dice = models.CharField(max_length=50, blank=True)
     obs_actividad_debe = models.CharField(max_length=50, blank=True)
-    observacion_actividad = models.CharField(max_length=100,blank=True)
+    observacion_actividad = models.CharField(max_length=350,blank=True)
     # Dirección Particular
     respuesta_direccion_part = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_direccion_part_dice = models.CharField(max_length=50, blank=True)
     obs_direccion_part_debe = models.CharField(max_length=50, blank=True)
-    observacion_direccion_part = models.CharField(max_length=100,blank=True)
+    observacion_direccion_part = models.CharField(max_length=350,blank=True)
   # Universidad
     respuesta_universidad = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_universidad_dice = models.CharField(max_length=50, blank=True)
     obs_universidad_debe = models.CharField(max_length=50, blank=True)
-    observacion_universidad = models.CharField(max_length=100,blank=True)
+    observacion_universidad = models.CharField(max_length=350,blank=True)
   # Fecha de Ingreso Empleo
     respuesta_fecha_in_empleo = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_fecha_in_empleo_dice = models.CharField(max_length=50, blank=True)
     obs_fecha_in_empleo_debe = models.CharField(max_length=50, blank=True)
-    observacion_fecha_in_empleo = models.CharField(max_length=100,blank=True)
+    observacion_fecha_in_empleo = models.CharField(max_length=350,blank=True)
   # Nivel Educacional
     respuesta_nivel_educa = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_nivel_educa_dice = models.CharField(max_length=50, blank=True)
     obs_nivel_educa_debe = models.CharField(max_length=50, blank=True)
-    observacion_nivel_educa = models.CharField(max_length=100,blank=True)
+    observacion_nivel_educa = models.CharField(max_length=350,blank=True)
   # Nacionalidad
     respuesta_nacionalidad = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_nacionalidad_dice = models.CharField(max_length=50, blank=True)
     obs_nacionalidad_debe = models.CharField(max_length=50, blank=True)
-    observacion_nacionalidad = models.CharField(max_length=100,blank=True)
+    observacion_nacionalidad = models.CharField(max_length=350,blank=True)
   # Tipo de Contrato
     respuesta_tipo_contrato = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_tipo_contrato_dice = models.CharField(max_length=50, blank=True)
     obs_tipo_contrato_debe = models.CharField(max_length=50, blank=True)
-    observacion_tipo_contrato = models.CharField(max_length=100,blank=True)
+    observacion_tipo_contrato = models.CharField(max_length=350,blank=True)
   # Tipo de Renta
     respuesta_tipo_renta = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_tipo_renta_dice = models.CharField(max_length=50, blank=True)
     obs_tipo_renta_debe = models.CharField(max_length=50, blank=True)
-    observacion_tipo_renta = models.CharField(max_length=100,blank=True)
+    observacion_tipo_renta = models.CharField(max_length=350,blank=True)
   # Carrera/Semestre
     respuesta_carrera_semestre = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_carrera_semestre_dice = models.CharField(max_length=50, blank=True)
     obs_carrera_semestre_debe = models.CharField(max_length=50, blank=True)
-    observacion_carrera_semestre = models.CharField(max_length=100,blank=True)
+    observacion_carrera_semestre = models.CharField(max_length=350,blank=True)
   # Profesión
     respuesta_profesion = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_profesion_dice = models.CharField(max_length=50, blank=True)
     obs_profesion_debe = models.CharField(max_length=50, blank=True)
-    observacion_profesion = models.CharField(max_length=100,blank=True)
+    observacion_profesion = models.CharField(max_length=350,blank=True)
   # Estado Civil
     respuesta_estado_civil = models.CharField(max_length=10, choices=RESPUESTAS, blank=True)
     obs_estado_civil_dice = models.CharField(max_length=50, blank=True)
     obs_estado_civil_debe = models.CharField(max_length=50, blank=True)
-    observacion_estado_civil = models.CharField(max_length=100,blank=True)
+    observacion_estado_civil = models.CharField(max_length=350,blank=True)
     
     def __str__(self):
         return f"Ingreso de Datos de evaluación {self.id_evaluacion}"
+    def contar_errores(self):
+        respuestas = [
+            self.respuesta_actividad,
+            self.respuesta_direccion_part,
+            self.respuesta_universidad,
+            self.respuesta_fecha_in_empleo,
+            self.respuesta_nivel_educa,
+            self.respuesta_nacionalidad,
+            self.respuesta_tipo_contrato,
+            self.respuesta_tipo_renta,
+            self.respuesta_carrera_semestre,
+            self.respuesta_profesion,
+            self.respuesta_estado_civil,
+        ]
+        return sum(1 for r in respuestas if r == 'Error')
+
 class Registro_materialidad(models.Model):
     id_registro = models.AutoField(primary_key=True)
     rut = models.CharField(max_length=12)

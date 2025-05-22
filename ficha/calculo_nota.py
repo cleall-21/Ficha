@@ -30,7 +30,7 @@ def calcular_nota(parametro):
     )
     
     if not created:
-        error_agravante.nota = nota_final
+        error_agravante.nota = nota_final # type: ignore
         error_agravante.save()
    
     return error_agravante

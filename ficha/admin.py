@@ -34,16 +34,9 @@ class EvaluacionAdmin(admin.ModelAdmin):
         self.message_user(request, "Nota final y clasificación recalculadas correctamente.")
         
     def tiene_errores(self, obj):
-        # Verifica si hay errores agravantes en alguno de los formularios
-        for form in obj.formalidad.all():
-            if form.get_notas_agravantes():
-                return True
-        for form in obj.gestion_otorga.all():
-            if form.get_notas_agravantes():
-                return True
-        for form in obj.depuracion_antecedentes.all():
-            if form.get_notas_agravantes():
-                return True
-        return False
-    tiene_errores.boolean = True
-    tiene_errores.short_description = "¿Tiene errores?"
+        cantidad = obj.contar_errores_totales()
+        if cantidad > 0:
+            return f"Sí ({cantidad} errores)"
+        return "No (0 errores)"
+    tiene_errores.short_description = "¿Tiene errores?" # type: ignore
+

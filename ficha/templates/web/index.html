@@ -81,7 +81,16 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="evaluacion" role="tabpanel" aria-labelledby="evaluacion-tab">
-                        {{ evaluacion_form.as_p }}
+                        <div class="form-group">
+                            <h3>Tipo de Cliente:</h3>
+                            {{ evaluacion_form.tipo_cliente}}
+                            <h3>Fecha:</h3>
+                            {{ evaluacion_form.fecha }}
+                            <h3>Nota Final:</h3>
+                            {{ evaluacion_form.nota_final }}
+                            <h3>Clasificación:</h3>
+                            {{ evaluacion_form.clasificacion }}
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="formalidad" role="tabpanel" aria-labelledby="formalidad-tab">
                         <h3> Verificacion Laboral</h3>
@@ -99,7 +108,7 @@
                 </div>
                 <div class="top-buttons">
                     <button type="reset" class="buttons clear">Limpiar</button>
-                    <button  class="buttons save">Guardar</button>
+                    <button type="submit" class="buttons save">Guardar</button>
                 </div>
             </form>
         </div>

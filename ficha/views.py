@@ -204,7 +204,7 @@ def listar_evaluaciones(request):
         evaluaciones = evaluaciones.filter(clasificacion__icontains=sucursal)  # Ajusta si tienes un campo específico para sucursal
 
     # Paginación
-    paginator = Paginator(evaluaciones, 3)  # 3 por página
+    paginator = Paginator(evaluaciones, 5)  # 3 por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

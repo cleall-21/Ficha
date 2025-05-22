@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
             data: {
                 labels: ['Excelente', 'Destacado', 'Aceptable', 'Regular', 'Insuficiente', 'Deficiente'],
                 datasets: [{
-                    data: [12, 8, 4, 5, 0, 0], //datos para el gráfico
-                    backgroundColor: ['#1F618D', '#2980B9', '#5499C7', '#85C1E9', '#ADE6F1', '#D4E6F1'], //colores del grafico
+                    data: [30, 26, 23, 18, 15, 12], //datos para el gráfico
+                    backgroundColor: ['#227dba', '#a2cbf8', '#edef72', '#f28643', '#de4300', '#d30000'], //colores del grafico
                     borderColor: '#ffffff', //bordes blancos entre secciones
                     borderWidth: 2 //grosor del borde
                 }]

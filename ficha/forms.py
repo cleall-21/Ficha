@@ -46,13 +46,13 @@ class SucursalForm(forms.Form):
 
     def clean_codigo_suc(self):
         codigo = self.cleaned_data.get('codigo_suc')
-        if codigo <= 0:
+        if codigo <= 0: # type: ignore
             raise forms.ValidationError("El código de sucursal debe ser un número positivo.")
         if not Registro_materialidad.objects.filter(codigo_suc=codigo).exists():
             raise forms.ValidationError("No existe una sucursal con ese código.")
         return codigo
 
-    def clean(self):
+    def clean(self): # type: ignore
         cleaned_data = super().clean()
         fecha_inicio = cleaned_data.get('fecha_inicio')
         fecha_fin = cleaned_data.get('fecha_fin')

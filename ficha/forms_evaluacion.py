@@ -2,15 +2,48 @@ from django import forms
 from django.forms import inlineformset_factory
 from .models import Evaluacion,EvaluacionFormalidad,EvaluacionGestionOtorga,EvaluacionDepuracionAntecedentes,EvaluacionIngresoDeDatos
 from .models import Errores_agravante
+from datetime import date
+
 class EvaluacionForm(forms.ModelForm):
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=True,
+        initial=date.today
+    )
+
     class Meta:
         model = Evaluacion
-        fields = ['tipo_cliente',
-                  'fecha',
-                  'nota_final',
-                  'clasificacion',
-                  'user',
-        ]
+        fields = ['tipo_cliente', 'fecha', 'nota_final', 'clasificacion']
+
+
+    def clean_fecha(self):
+        fecha = self.cleaned_data.get('fecha')
+        if fecha > date.today():# type: ignore
+            raise forms.ValidationError("La fecha no puede ser en el futuro.")
+        return fecha
+
+    def clean_tipo_cliente(self):
+        tipo = self.cleaned_data.get('tipo_cliente')
+        if not tipo:
+            raise forms.ValidationError("Debe seleccionar un tipo de cliente.")
+        return tipo
+
+    def clean_nota_final(self):
+        nota = self.cleaned_data.get('nota_final')
+        if nota is None:
+            raise forms.ValidationError("Debe ingresar una nota.")
+        if nota < 0 or nota > 5:
+            raise forms.ValidationError("La nota debe estar entre 0 y 5.")
+        return nota
+
+    def clean_clasificacion(self):
+        clasificacion = self.cleaned_data.get('clasificacion')
+        if not clasificacion:
+            raise forms.ValidationError("Debe ingresar una clasificación.")
+        if len(clasificacion.strip()) < 3:
+            raise forms.ValidationError("La clasificación debe tener al menos 3 caracteres.")
+        return clasificacion
+
 class EvaluacionFormalidadForm(forms.ModelForm):
     class Meta:
         model = EvaluacionFormalidad
