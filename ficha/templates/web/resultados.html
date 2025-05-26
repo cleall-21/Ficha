@@ -4,13 +4,16 @@
         {% for filtro in filtros %}
         <li class="item-resultado">
             <strong>RUT:</strong> {{ filtro.rut }}-{{ filtro.dv }}<br>
-            <strong>Fecha:</strong> {{ filtro.log_fecha_registro}}<br>
+            <strong>Fecha:</strong> {{ filtro.log_fecha_registro }}<br>
             <strong>Login Ejecutivo:</strong> {{ filtro.login_creador }}<br>
             <strong>Sucursal:</strong> {{ filtro.nombre_suc }}<br>
             <strong>Producto Evaluado:</strong> {{ filtro.prod_eval }}<br>
             <strong>Monto Oferta:</strong> {{ filtro.monto_oferta }}<br>
             <strong>Proceso Crédito:</strong> {{ filtro.proceso_credito }}<br>
             <strong>Estado:</strong> {{ filtro.estado }}<br>
+
+            <!-- Botón para evaluar -->
+            <button class="evaluar-btn" data-rut="{{ filtro.rut }}">Evaluar</button>
         </li>
         {% endfor %}
     </ul>

@@ -14,7 +14,7 @@ from .forms_evaluacion import EvaluacionForm, FormalidadFormSet, GestionOtorgaFo
 from .forms import SucursalForm
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 
 # Create your views here.
 def registro(request):
@@ -87,6 +87,27 @@ def logout_view(request):
 @login_required
 def base(request):
     return render(request, 'web/base.html')
+
+def obtener_datos_oportunidad(request, rut):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            oportunidad = Registro_materialidad.objects.filter(rut=rut).latest('log_fecha_registro')
+        except Registro_materialidad.DoesNotExist:
+            return JsonResponse({'error': 'Oportunidad no encontrada'}, status=404)
+
+        data = {
+            'rut_cliente': oportunidad.rut,
+            'nombre_ejec': oportunidad.nombre_ejecutivo,
+            'login_ejecutivo': oportunidad.login_creador,
+            'rut_ejec':oportunidad.rut_ejecutivo,
+            'sucursal': oportunidad.nombre_suc,
+            'codigo_sucursal': oportunidad.codigo_suc,
+            'producto': oportunidad.prod_eval,
+            'monto_solicitado': oportunidad.monto_oferta,
+            'proceso_credito': oportunidad.proceso_credito,
+        }
+        return JsonResponse(data)
+    return JsonResponse({'error': 'Solicitud inválida'}, status=400)
 
 @login_required
 def buscar_oportunidad(request):
@@ -198,13 +219,12 @@ def listar_evaluaciones(request):
     fecha_fin = request.GET.get('fecha_fin')
     sucursal = request.GET.get('sucursal')
 
-    if fecha_inicio and fecha_fin:
-        evaluaciones = evaluaciones.filter(fecha__range=[fecha_inicio, fecha_fin])
+
     if sucursal:
         evaluaciones = evaluaciones.filter(clasificacion__icontains=sucursal)  # Ajusta si tienes un campo específico para sucursal
 
     # Paginación
-    paginator = Paginator(evaluaciones, 5)  # 3 por página
+    paginator = Paginator(evaluaciones, 5)  # 5 por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

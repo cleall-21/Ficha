@@ -82,9 +82,30 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="evaluacion" role="tabpanel" aria-labelledby="evaluacion-tab">
                         <div class="form-group">
+                            <h3>RUT Cliente:</h3>
+                            {{ evaluacion_form.rut_cliente }}
+                            <h3>Nombre Ejecutivo:</h3>
+                            {{ evaluacion_form.nombre_ejec }}
+                            <h3>Login Ejecutivo:</h3>
+                            {{ evaluacion_form.login_ejecutivo }}
+                            <h3>RUT Ejecutivo:</h3>
+                            {{ evaluacion_form.rut_ejec }}
+                            <h3>Sucursal:</h3>
+                            {{ evaluacion_form.sucursal }}
+                            <h3>Código Sucursal:</h3>
+                            {{ evaluacion_form.codigo_sucursal }}
+                            <h3>Tipo de Producto:</h3>
+                            {{ evaluacion_form.producto }}
+                            <h3>Monto Solicitado:</h3>
+                            {{ evaluacion_form.monto_solicitado }}
+                            <h3>Tipo de Revisión:</h3>
+                            {{ evaluacion_form.proceso_credito }}
+
+                            <hr>
+
                             <h3>Tipo de Cliente:</h3>
-                            {{ evaluacion_form.tipo_cliente}}
-                            <h3>Fecha:</h3>
+                            {{ evaluacion_form.tipo_cliente }}
+                            <h3>Fecha Inicio Revisión:</h3>
                             {{ evaluacion_form.fecha }}
                             <h3>Nota Final:</h3>
                             {{ evaluacion_form.nota_final }}
@@ -93,17 +114,320 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="formalidad" role="tabpanel" aria-labelledby="formalidad-tab">
-                        <h3> Verificacion Laboral</h3>
-                        {{ formalidad_formset.as_p }}
+                        {{ formalidad_formset.management_form }}
+
+                        {% for form in formalidad_formset %}
+                            <div class="formset-form">
+                                <h3>Respuesta Verificación Laboral</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_verificacion_laboral }}
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_verificacion_laboral }}
+                                    </div>
+                                    <div class="observacion">
+                                        {{ form.observacion_verificacion }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Estado de Situación</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_estado_situacion }}
+
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_estado_situacion }}
+                                    </div>
+
+                                    <div class="observacion">
+                                        {{ form.observacion_estado }}
+                                    </div>
+                                </div>
+
+                                <h3>Respuesta Acreditación de Ingresos</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_acreditacion_ingresos }}
+
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_acreditacion_ingresos }}
+                                    </div>
+
+                                    <div class="observacion">
+                                        {{ form.observacion_acreditacion }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
+
                     <div class="tab-pane fade" id="gestion" role="tabpanel" aria-labelledby="gestion-tab">
-                        {{ gestion_otorga_formset.as_p }}
+                        {{ gestion_otorga_formset.management_form}}
+
+                        {% for form in gestion_otorga_formset %}
+                            <div class="formset-form">
+                                <h3>Respuesta Atribuciones</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_atribuciones }}
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_atribuciones }}
+                                    </div>
+                                    <div class="observacion">
+                                        {{ form.observaciones_atribuciones }}
+                                    </div>
+                                </div>
+        
+                                <h3>Respuesta Constitución Garantías y/o Aval</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_constitucion_garantia }}
+
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_constitucion_garantia }}
+                                    </div>
+
+                                    <div class="observacion">
+                                        {{ form.observaciones_constitucion_garantia }}
+                                    </div>
+                                </div>
+
+                                <h3>Respuesta Condiciones de Aprobación</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_condiciones_aprobacion }}
+
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_condiciones_aprobacion }}
+                                    </div>
+
+                                    <div class="observacion">
+                                        {{ form.observacion_condicion_aprob }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Cambio Resultado Evaluación Automática</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_cambio_evaAT }}
+
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_cambio_evaAT }}
+                                    </div>
+
+                                    <div class="observacion">
+                                        {{ form.observacion_cambioEva }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Deudas Vinculadas</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_deudas_vinculadas }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_res_deuda_vincu }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="tab-pane fade" id="depuracion" role="tabpanel" aria-labelledby="depuracion-tab">
-                        {{ depuracion_antecedentes_formset.as_p }}
+                        {{ depuracion_antecedentes_formset.management_form }}
+
+                        {% for form in depuracion_antecedentes_formset %}
+                            <div class="formset-form">
+                                <div class="form-group">
+                                    <h3>Respuesta Ingresos Mensuales</h3>
+                                    {{ form.respuesta_ingresos_mensuales }}
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_ingresos_mensuales }}
+                                    </div>
+                                    <div class="observacion">
+                                        {{ form.observacion_ingresos_mensuales }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Activos</h3>
+                                    {{ form.respuesta_activo }}
+                                    <div class="observacion">
+                                        {{ form.observacion_activo }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Dividendo BCH</h3>
+                                    {{ form.respuesta_dividendo_BCH }}
+                                    <div class="observacion">
+                                        {{ form.observacion_dividendo_BCH }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Arriendos Pagados</h3>
+                                    {{ form.respuesta_arriendos }}
+                                    <div class="observacion">
+                                        {{ form.observacion_arriendos }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Cuota Préstamo</h3>
+                                    {{ form.respuesta_cuota_prestamo }}
+                                    <div class="observacion">
+                                        {{ form.observacion_cuota_prestamo }}
+                                    </div>
+                               </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Renegociado</h3>
+                                    {{ form.respuesta_renegociado }}
+                                    <div class="tipo-error">
+                                        {{ form.tipo_error_monto_renegociado }}
+                                    </div>
+                                    <div class="observacion">
+                                        {{ form.observacion_renegociado }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>Respuesta Otros Egresos</h3>
+                                    {{ form.respuesta_otros_egre }}
+                                    <div class="observacion">
+                                        {{ form.observacion_otros_egre }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <h3>¿Corresponde Compra Cartera?</h3>
+                                    {{ form.corresponde_compra_cartera }}
+                                </div>
+                                <!-- Campos dependientes de Compra Cartera -->
+                                <div class="campos-compra-cartera" style="display: none;">
+                                    <div class="form-group">
+                                        <h3>Cuota Banco CP</h3>
+                                        {{ form.respuesta_cuota_cp }}
+                                        <div class="observaciones">
+                                            {{ form.observacion_cuota_cp }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3>Cuota Compra OOII</h3>
+                                        {{ form.respuesta_cuota_ooii }}
+                                        <div class="observacion">
+                                            {{ form.observacion_cuota_ooii }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3>Monto Compra Banco LP</h3>
+                                        {{ form.respuesta_monto_compra_lp }}
+                                        <div class="observacion">
+                                            {{ form.observacion_monto_compra_lp }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3>Monto Compra Banco CP</h3>
+                                        {{ form.respuesta_monto_compra_cp }}
+                                        <div class="observacion">
+                                            {{ form.observacion_monto_compra_cp }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3>Monto Compra OOII</h3>
+                                        {{ form.respuesta_monto_compra_ooii }}
+                                        <div class="observacion">
+                                            {{ form.observacion_monto_compra_ooii }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h3>Monto Compra SBIF</h3>
+                                        {{ form.respuesta_monto_compra_sbif }}
+                                        <div class="observacion">
+                                            {{ form.observacion_monto_compra_sbif }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                     <div class="tab-pane fade" id="ingreso" role="tabpanel" aria-labelledby="ingreso-tab">
-                        {{ ingreso_datos_formset.as_p }}
+                        {{ ingreso_datos_formset.management_form }}
+
+                        {% for form in ingreso_datos_formset %}
+                            <div class="formset-form">
+                                <h3>Respuesta Actividad</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_actividad }}
+                                   
+                                    <div class="observacion">
+                                        {{ form.observacion_actividad }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Dirección Particular</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_direccion_part }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_direccion_part }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Universidad</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_universidad }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_universidad }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Fecha de Ingreso Empleo</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_fecha_in_empleo }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_fecha_in_empleo }}
+                                    </div>
+                                </div>
+                                <h3>Respuesta Nivel Educacional</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_nivel_educa }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_nivel_educa }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Nacionalidad</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_nacionalidad }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_nacionalidad }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Tipo de Contrato</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_tipo_contrato }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_tipo_contrato }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Tipo de Renta</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_tipo_renta }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_tipo_renta }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Carrera/Semestre</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_carrera_semestre }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_carrera_semestre }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Profesión</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_profesion }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_profesion }}
+                                    </div>
+                                </div>
+                                 <h3>Respuesta Estado Civil</h3>
+                                <div class="form-group">
+                                    {{ form.respuesta_estado_civil }}
+
+                                    <div class="observacion">
+                                        {{ form.observacion_estado_civil }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="top-buttons">

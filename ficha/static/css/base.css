@@ -89,13 +89,11 @@ footer {
   height: 12px;
   border-radius: 50%;
   background-color: grey;
-  margin-left: 1px;
   display: flex;
   position: absolute;
-  z-index: 1;
   right: 0;
-  transform: translateX(-200%);
-  top: 60px;
+  transform: translateX(-360%);
+  top: 50px;
 }
 
 .active {

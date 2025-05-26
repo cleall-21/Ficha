@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from .views import login, base, index, registro, listar_ejec, reporte,carga_materialidad,listar_evaluaciones
-from .views import detalle_eva,delete_evaluacion,buscar_oportunidad
+from .views import detalle_eva,delete_evaluacion,buscar_oportunidad,obtener_datos_oportunidad
 urlpatterns = [
     path('', login, name='login'),
     path('registro/', registro, name='registro'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('listar_evaluaciones/', listar_evaluaciones, name='list_form'),
     path('index/<int:id_evaluacion>/', detalle_eva, name='detalle_eva'),
     path('delete_evaluacion/<int:id_evaluacion>/', delete_evaluacion, name='delete_evaluacion'),
+    path('obtener_oportunidad/<str:rut>/', obtener_datos_oportunidad, name='obtener_oportunidad'),
 ]
