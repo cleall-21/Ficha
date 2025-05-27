@@ -48,4 +48,5 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
+// Funcion para calcular el promedio de una sucursal, suma de todas las notas de la sucursal x cantidad de ejecutivos lo cual equivale al 70% de la nota
+// + el 30% lo cual corresponde a una nota automatica que se debe ingresar manualmente, lo cual da como resultado la nota final de la sucursal.

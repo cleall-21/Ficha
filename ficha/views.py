@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-#Import Modelo de tablas User
 from django.contrib.auth.models import User
 from .models import UserProfile, Registro_materialidad, Evaluacion
 # Import Libreria de autentificacion
@@ -14,7 +13,25 @@ from .forms_evaluacion import EvaluacionForm, FormalidadFormSet, GestionOtorgaFo
 from .forms import SucursalForm
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse
+import requests 
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Evaluacion
+from .serializers import EvaluacionSerializer
+
+# API para llamar al calculo de la nota al frontend
+class EvaluacionViewSet(viewsets.ModelViewSet):
+    queryset = Evaluacion.objects.all()
+    serializer_class = EvaluacionSerializer
+
+    @action(detail=True, methods=['POST'])
+    def calcular(self, request, pk=None):
+        evaluacion = self.get_object()
+        evaluacion.calcular_nota_final()
+        serializer = self.get_serializer(evaluacion)
+        return Response(serializer.data)
 
 # Create your views here.
 def registro(request):
@@ -211,6 +228,7 @@ def index(request):
         'depuracion_antecedentes_formset': depuracion_antecedentes_formset,
         'ingreso_datos_formset': ingreso_datos_formset
     })
+
 @login_required
 def listar_evaluaciones(request):
     evaluaciones = Evaluacion.objects.filter(user=request.user)
@@ -234,7 +252,6 @@ def listar_evaluaciones(request):
         'fecha_fin': fecha_fin,
         'sucursal': sucursal
     })
-
 
 @login_required
 def detalle_eva(request, id_evaluacion):
@@ -362,3 +379,16 @@ def carga_materialidad(request):
             return HttpResponse(f"Errores encontrados: {', '.join(errores)}")
         return HttpResponse("Datos cargados exitosamente")
     return render(request, 'web/carga_materialidad.html')
+
+import requests
+from django.shortcuts import render
+
+def vista_evaluaciones_api(request):
+    try:
+        response = requests.get('http://localhost:8000/api/evaluaciones/')
+        evaluaciones = response.json()
+    except Exception as e:
+        evaluaciones = []
+        print("Error al obtener evaluaciones:", e)
+
+    return render(request, 'web/calculo_nota.html', {'evaluaciones': evaluaciones})

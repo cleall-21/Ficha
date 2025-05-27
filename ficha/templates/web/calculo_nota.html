@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluaciones desde API</title>
+</head>
+<body>
+    <h1>Listado de Evaluaciones</h1>
+
+    {% if evaluaciones %}
+        <ul>
+            {% for eva in evaluaciones %}
+                <li>
+                    ID Evaluación: {{eva.id_evaluacion}} - {{eva.rut_cliente}} - {{ eva.login_ejecutivo }} - {{ eva.sucursal }} - Nota: {{ eva.nota_final }} -  {{eva.clasificacion}}
+                    <form method="post" action="/api/evaluaciones/{{ eva.id_evaluacion }}/calcular/" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Calcular Nota</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se encontraron evaluaciones.</p>
+    {% endif %}
+</body>
+</html>
