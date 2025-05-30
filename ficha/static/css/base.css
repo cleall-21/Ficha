@@ -358,27 +358,3 @@ footer {
   cursor: pointer;
   font-size: 18px;
 }
-/* Botones Principales */
-.tarjeta {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 95%;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-top: 10px;
-  margin-left: 1%;
-}
-
-.tarjeta .resultado {
-  font-size: 20px;
-  padding: 15px;
-  background-color: #132669;
-  color: white;
-  border-radius: 10px;
-  margin-top: 10px;
-  text-align: center;
-  font-weight: bold;
-}

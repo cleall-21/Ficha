@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .models import UserProfile, Registro_materialidad, Evaluacion
+from .models import UserProfile, Registro_materialidad, Evaluacion, Detalle_evaluaciones,actualizar_detalle_evaluaciones
 # Import Libreria de autentificacion
 from django.contrib.auth import authenticate, logout, login as login_auth
 from django.views.decorators.csrf import csrf_protect
@@ -18,20 +18,67 @@ import requests
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Evaluacion
-from .serializers import EvaluacionSerializer
+from .models import Evaluacion, Detalle_evaluaciones
+from .serializers import EvaluacionSerializer, DetalleEvaluacionesSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status
 
 # API para llamar al calculo de la nota al frontend
 class EvaluacionViewSet(viewsets.ModelViewSet):
     queryset = Evaluacion.objects.all()
     serializer_class = EvaluacionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'codigo_sucursal': ['exact'],
+        'fecha': ['gte', 'lte'],
+    }
 
     @action(detail=True, methods=['POST'])
     def calcular(self, request, pk=None):
         evaluacion = self.get_object()
         evaluacion.calcular_nota_final()
+
+        # Actualizar el resumen por sucursal
+        try:
+            actualizar_detalle_evaluaciones(
+                codigo_sucursal=evaluacion.codigo_sucursal,
+                nota_automatica=('0')  # o algún valor por defecto
+            )
+        except Exception as e:
+            print(f"Error al actualizar detalle de sucursal: {e}")
+
         serializer = self.get_serializer(evaluacion)
         return Response(serializer.data)
+
+class DetalleEvaluacionesViewSet(viewsets.ModelViewSet):
+    queryset = Detalle_evaluaciones.objects.all()
+    serializer_class = DetalleEvaluacionesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'codigo_sucursal': ['exact'],
+    }
+
+    @action(detail=True, methods=['post'])
+    def calcular(self, request, pk=None):
+        nota_automatica = request.data.get('nota_automatica')
+
+        if nota_automatica is None:
+            return Response({'error': 'nota_automatica es requerida'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            detalle, created = actualizar_detalle_evaluaciones(
+                codigo_sucursal=pk,
+                nota_automatica=nota_automatica
+            ) # type: ignore
+
+            if detalle is None:
+                return Response({'error': 'No hay evaluaciones para esta sucursal'}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = self.get_serializer(detalle)
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # Create your views here.
 def registro(request):
@@ -380,15 +427,29 @@ def carga_materialidad(request):
         return HttpResponse("Datos cargados exitosamente")
     return render(request, 'web/carga_materialidad.html')
 
-import requests
-from django.shortcuts import render
-
 def vista_evaluaciones_api(request):
     try:
-        response = requests.get('http://localhost:8000/api/evaluaciones/')
-        evaluaciones = response.json()
+        response_eval = requests.get('http://127.0.0.1:8000/evaluaciones/')
+        response_detalle = requests.get('http://127.0.0.1:8000/detalle-evaluaciones/')
+
+        if response_eval.status_code == 200:
+            evaluaciones = response_eval.json()
+        else:
+            evaluaciones = []
+            print("Error al obtener evaluaciones:", response_eval.status_code)
+
+        if response_detalle.status_code == 200:
+            detalles = response_detalle.json()
+        else:
+            detalles = []
+            print("Error al obtener detalles:", response_detalle.status_code)
+
     except Exception as e:
         evaluaciones = []
-        print("Error al obtener evaluaciones:", e)
+        detalles = []
+        print("Error al obtener datos:", e)
 
-    return render(request, 'web/calculo_nota.html', {'evaluaciones': evaluaciones})
+    return render(request, 'web/calculo_nota.html', {
+        'evaluaciones': evaluaciones,
+        'detalles': detalles
+    })

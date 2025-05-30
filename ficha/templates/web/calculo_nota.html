@@ -1,26 +1,60 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Evaluaciones desde API</title>
-</head>
-<body>
-    <h1>Listado de Evaluaciones</h1>
+{% extends "web/base.html" %}
+{% load static %}
 
-    {% if evaluaciones %}
-        <ul>
-            {% for eva in evaluaciones %}
-                <li>
-                    ID Evaluación: {{eva.id_evaluacion}} - {{eva.rut_cliente}} - {{ eva.login_ejecutivo }} - {{ eva.sucursal }} - Nota: {{ eva.nota_final }} -  {{eva.clasificacion}}
-                    <form method="post" action="/api/evaluaciones/{{ eva.id_evaluacion }}/calcular/" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Calcular Nota</button>
-                    </form>
-                </li>
-            {% endfor %}
+{% block estilos %}
+    <link rel="stylesheet" href="{% static 'css/calculo_nota.css' %}">
+    <title>Cálculo de Notas - Evaluaciones</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock estilos %}
+
+{% block contenido %}
+    <div class="container">
+        <h1>Listado de Evaluaciones</h1>
+        <form id="filtro-form">
+            {% csrf_token %}
+            <label for="fecha_inicio">Desde:</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio">
+            <label for="fecha_fin">Hasta:</label>
+            <input type="date" id="fecha_fin" name="fecha_fin">
+            <label for="sucursal">Codigo Sucursal:</label>
+            <input type="text" id="sucursal" name="sucursal">
+            <button type="submit">Filtrar</button>
+            <button type="reset" >Limpiar</button>
+        </form>
+
+        <!-- Lista de evaluaciones -->
+        <ul id="evaluaciones-lista">
+            <!-- Evaluaciones se insertan aquí dinámicamente -->
         </ul>
-    {% else %}
-        <p>No se encontraron evaluaciones.</p>
-    {% endif %}
-</body>
-</html>
+          <!-- Botón único para calcular todas las notas -->
+        <button id="calcular-todas">Calcular Notas</button>
+
+        <h2>Resumen por Sucursal</h2>
+        <form id="nota-form">
+            <label for="nota_automatica_global">Nota Automática (obligatoria):</label>
+            <input type="number" id="nota_automatica_global" name="nota_automatica_global" step="0.1" min="1" max="7" required>
+        </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Promedio</th>
+                        <th>Nota Automática</th>
+                        <th>Nota Final</th>
+                        <th>Clasificación</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-detalles">
+                    <!-- Se llenará con JS -->
+                </tbody>
+            </table>
+            <button id="calcular-resumen">Calcular Nota Final por Sucursal</button>
+    </div>
+    {% block js %}
+    <script src="{% static 'js/calculoNotaEvaluacion.js' %}"></script>
+    <script src="{% static 'js/calculoNotaSucursal.js' %}"></script>
+    {% endblock js %}
+
+{% endblock %}

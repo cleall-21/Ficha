@@ -2,14 +2,17 @@ from django.urls import path, include
 from .views import (
     login, base, index, registro, listar_ejec, reporte,
     carga_materialidad, listar_evaluaciones, detalle_eva,
-    delete_evaluacion, buscar_oportunidad, obtener_datos_oportunidad,vista_evaluaciones_api
+    delete_evaluacion, buscar_oportunidad, obtener_datos_oportunidad, vista_evaluaciones_api
 )
-# Importaciones para la API
+
+# Importaciones para la API´s
 from rest_framework.routers import DefaultRouter
-from .views import EvaluacionViewSet
+from .views import EvaluacionViewSet, DetalleEvaluacionesViewSet  
+
 # Configuración del router para la API
 router = DefaultRouter()
-router.register(r'api/evaluaciones', EvaluacionViewSet)
+router.register(r'evaluaciones', EvaluacionViewSet)
+router.register(r'detalle-evaluaciones', DetalleEvaluacionesViewSet)
 
 urlpatterns = [
     path('', login, name='login'),
@@ -24,7 +27,7 @@ urlpatterns = [
     path('index/<int:id_evaluacion>/', detalle_eva, name='detalle_eva'),
     path('delete_evaluacion/<int:id_evaluacion>/', delete_evaluacion, name='delete_evaluacion'),
     path('obtener_oportunidad/<str:rut>/', obtener_datos_oportunidad, name='obtener_oportunidad'),
-    path('calculo_nota/', vista_evaluaciones_api, name='calculo_nota'),
+    path('calculo_nota/', vista_evaluaciones_api, name='notas'),
 
     # Rutas de la API
     path('', include(router.urls)),

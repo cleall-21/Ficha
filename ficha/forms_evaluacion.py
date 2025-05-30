@@ -13,11 +13,9 @@ class EvaluacionForm(forms.ModelForm):
     class Meta:
         model = Evaluacion
         fields = [
-            # Campos automáticos (Formulario 1)
             'rut_cliente', 'nombre_ejec', 'login_ejecutivo', 'rut_ejec','sucursal',
             'codigo_sucursal', 'producto', 'monto_solicitado', 'proceso_credito',
-
-            'tipo_cliente', 'fecha', 'nota_final', 'clasificacion'
+            'tipo_cliente', 'fecha'
         ]
         widgets = {
             'rut_cliente': forms.TextInput(attrs={'readonly': 'readonly'}),
@@ -42,22 +40,6 @@ class EvaluacionForm(forms.ModelForm):
         if not tipo:
             raise forms.ValidationError("Debe seleccionar un tipo de cliente.")
         return tipo
-
-    def clean_nota_final(self):
-        nota = self.cleaned_data.get('nota_final')
-        if nota is None:
-            raise forms.ValidationError("Debe ingresar una nota.")
-        if nota < 0 or nota > 5:
-            raise forms.ValidationError("La nota debe estar entre 0 y 5.")
-        return nota
-
-    def clean_clasificacion(self):
-        clasificacion = self.cleaned_data.get('clasificacion')
-        if not clasificacion:
-            raise forms.ValidationError("Debe ingresar una clasificación.")
-        if len(clasificacion.strip()) < 3:
-            raise forms.ValidationError("La clasificación debe tener al menos 3 caracteres.")
-        return clasificacion
 class EvaluacionFormalidadForm(forms.ModelForm):
     class Meta:
         model = EvaluacionFormalidad

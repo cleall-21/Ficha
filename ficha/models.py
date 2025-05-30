@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
+from django.db.models import Avg
 from django.core.validators import MaxValueValidator
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -44,7 +45,7 @@ TIPOS = [
 class Evaluacion(models.Model):
     id_evaluacion = models.AutoField(primary_key=True)
     # Campos traídos desde Formulario 1
-    rut_cliente = models.CharField(max_length=12,default="Rut no registrado") # AGREGAR RUT DEL EJECUTIVO Y ADEMAS CAMBIAR NOMBRE DE RUT A RUT_CLIENTE PARA EVITAR CONFUSIONES DE USERS
+    rut_cliente = models.CharField(max_length=12,default="Rut no registrado")
     nombre_ejec = models.CharField(max_length=100,default="Nombre no encontrado")
     login_ejecutivo = models.CharField(max_length=50,default="Login no encontrado")
     rut_ejec = models.CharField(max_length=12,default="Rut no registrado") 
@@ -56,8 +57,8 @@ class Evaluacion(models.Model):
     # Campos existentes
     tipo_cliente = models.CharField(max_length=10, blank=True, choices=TIPOS)
     fecha = models.DateField()
-    nota_final = models.DecimalField(max_digits=5, decimal_places=2)
-    clasificacion = models.CharField(max_length=15)
+    nota_final = models.DecimalField(max_digits=5, decimal_places=2, default=0.00) # type: ignore
+    clasificacion = models.CharField(max_length=15, default="Excelente")
     cantidad_errores = models.PositiveIntegerField(default=0) 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -67,17 +68,18 @@ class Evaluacion(models.Model):
     def calcular_nota_final(self):
         nota_minima = Decimal('5.0')
         errores_agregados = False
+        tipo_cliente = self.tipo_cliente  # Asegúrate de que esto esté disponible
 
         # Formalidad
         for detalle in self.formalidad.all():  # type: ignore
-            notas = detalle.get_notas_agravantes()
+            notas = detalle.get_notas_agravantes(tipo_cliente=tipo_cliente)
             if notas:
                 errores_agregados = True
                 nota_minima = min(nota_minima, *notas)
 
         # Gestión Otorga
         for detalle in self.gestion_otorga.all():  # type: ignore
-            notas = detalle.get_notas_agravantes()
+            notas = detalle.get_notas_agravantes(tipo_cliente=tipo_cliente)
             if notas:
                 errores_agregados = True
                 nota_minima = min(nota_minima, *notas)
@@ -91,21 +93,20 @@ class Evaluacion(models.Model):
 
         self.cantidad_errores = self.contar_errores_totales()
 
-        # Si no hay errores agravantes, usar nota por cantidad de errores
         if not errores_agregados:
             nota_minima = self.obtener_nota_por_errores(self.cantidad_errores)
         else:
-            # Ajustar nota mínima según cantidad de errores
             if self.cantidad_errores > 5:
                 nota_minima = Decimal('1')
             elif self.cantidad_errores == 5:
-                nota_minima = max(Decimal('1'), nota_minima - Decimal('0.5'))
-            elif self.cantidad_errores in [3, 4]:
                 nota_minima = max(Decimal('1'), nota_minima )
+            elif self.cantidad_errores in [3, 4]:
+                nota_minima = max(Decimal('1'), nota_minima)
 
         self.nota_final = nota_minima
         self.clasificacion = self.obtener_clasificacion(nota_minima)
         self.save()
+
 
     def contar_errores_totales(self):
         total_errores = 0
@@ -127,8 +128,8 @@ class Evaluacion(models.Model):
     def obtener_nota_por_errores(self, cantidad_errores):
         if cantidad_errores == 0:
             return 5
-        elif cantidad_errores <=2:
-            return 4.5 
+        elif cantidad_errores <= 2:
+            return 4 
         elif cantidad_errores == 3:
             return 3.5
         elif cantidad_errores == 4:
@@ -151,6 +152,56 @@ class Evaluacion(models.Model):
             return "Destacado"
         else:
             return "Excelente"
+
+class Detalle_evaluaciones(models.Model):
+    codigo_sucursal = models.IntegerField(primary_key=True,unique=True)
+    nombre_sucursal = models.CharField(max_length=100)
+    promedio_notas = models.DecimalField(max_digits=5, decimal_places=2, default=0.00) # type: ignore
+    nota_automatica = models.DecimalField(max_digits=5, decimal_places=2, default=0.00) # type: ignore
+    nota_final = models.DecimalField(max_digits=5, decimal_places=2, default=0.00) # type: ignore
+    clasificacion_final = models.CharField(max_length=15, default="Sin clasificar")
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.nombre_sucursal} ({self.codigo_sucursal})"
+
+def clasificar_nota(nota):
+    if nota < 2:
+        return 'Deficiente'
+    elif nota < 3:
+        return 'Insuficiente'
+    elif nota < 4:
+        return 'Regular'
+    elif nota < 5:
+        return 'Destacado'
+    else:
+        return 'Excelente'
+
+def actualizar_detalle_evaluaciones(codigo_sucursal, nota_automatica):
+    evaluaciones = Evaluacion.objects.filter(codigo_sucursal=codigo_sucursal)
+    
+    if not evaluaciones.exists():
+        return None  # No hay evaluaciones para esta sucursal
+
+    promedio = evaluaciones.aggregate(prom=Avg('nota_final'))['prom'] or 0
+    promedio = Decimal(promedio)
+    nota_automatica = Decimal(nota_automatica)
+
+    nota_final = (promedio * Decimal('0.7')) + (nota_automatica * Decimal('0.3'))
+    clasificacion = clasificar_nota(nota_final)
+
+    detalle, created = Detalle_evaluaciones.objects.update_or_create(
+        codigo_sucursal=codigo_sucursal,
+        defaults={
+            'nombre_sucursal': evaluaciones.first().sucursal, # type: ignore
+            'promedio_notas': promedio,
+            'nota_automatica': nota_automatica,
+            'nota_final': nota_final,
+            'clasificacion_final': clasificacion
+        }
+    )
+    return detalle
+
 class EvaluacionFormalidad(models.Model):
     id_evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='formalidad')
     # Verificación Laboral
@@ -196,14 +247,40 @@ class EvaluacionFormalidad(models.Model):
         errores = sum(1 for r in respuestas if r == 'Error')
         return errores
 
-    def get_notas_agravantes(self):
+    def get_notas_agravantes(self, tipo_cliente=None):
         notas = []
-        if self.tipo_error_verificacion_laboral:
-            notas.append(self.tipo_error_verificacion_laboral.nota)
-        if self.tipo_error_estado_situacion:
-            notas.append(self.tipo_error_estado_situacion.nota)
-        if self.tipo_error_acreditacion_ingresos:
-            notas.append(self.tipo_error_acreditacion_ingresos.nota)
+
+        errores = [
+            self.tipo_error_verificacion_laboral,
+            self.tipo_error_estado_situacion,
+            self.tipo_error_acreditacion_ingresos
+        ]
+
+        for error in errores:
+            if error:
+                if error.tipo_error == 'No está en carpeta' and tipo_cliente:
+                    if tipo_cliente in {'Nuevo', 'Prospecto'}:
+                        notas.append(Decimal('2.5'))
+                    elif tipo_cliente in {'Antiguo', 'Plus'}:
+                        notas.append(Decimal('3'))
+                    else:
+                        notas.append(error.nota)
+                elif error.tipo_error =='E°S° Sin Fecha'and tipo_cliente: 
+                    if tipo_cliente in {'Nuevo', 'Prospecto'}:
+                        notas.append(Decimal('2.5'))
+                    elif tipo_cliente in {'Antiguo', 'Plus'}:
+                        notas.append(Decimal('3'))
+                    else:
+                        notas.append(error.nota)
+                elif error.tipo_error =='Documentación sin validar'and tipo_cliente: 
+                    if tipo_cliente in {'Nuevo', 'Prospecto'}:
+                        notas.append(Decimal('2.5'))
+                    elif tipo_cliente in {'Antiguo', 'Plus'}:
+                        notas.append(Decimal('3'))
+                    else:
+                        notas.append(error.nota)
+                else:
+                    notas.append(error.nota)
         return notas
 class EvaluacionGestionOtorga(models.Model):
     id_evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='gestion_otorga')
@@ -263,17 +340,34 @@ class EvaluacionGestionOtorga(models.Model):
         ]
         errores = sum(1 for r in respuestas if r == 'Error')
         return errores
-    
-    def get_notas_agravantes(self):
+    def get_notas_agravantes(self, tipo_cliente=None):
         notas = []
-        if self.tipo_error_atribuciones:
-            notas.append(self.tipo_error_atribuciones.nota)
-        if self.tipo_error_constitucion_garantia:
-            notas.append(self.tipo_error_constitucion_garantia.nota)
-        if self.tipo_error_condiciones_aprobacion:
-            notas.append(self.tipo_error_condiciones_aprobacion.nota)
-        if self.tipo_error_cambio_evaAT:
-            notas.append(self.tipo_error_cambio_evaAT.nota)
+
+        errores = [
+            self.tipo_error_atribuciones,
+            self.tipo_error_constitucion_garantia,
+            self.tipo_error_condiciones_aprobacion,
+            self.tipo_error_condiciones_aprobacion,
+            self.tipo_error_cambio_evaAT
+        ]
+        for error in errores:
+            if error:
+                if error.tipo_error == 'Atribuciones insuficientes' and tipo_cliente:
+                    if tipo_cliente in {'Nuevo', 'Prospecto'}:
+                        notas.append(Decimal('1'))
+                    elif tipo_cliente in {'Antiguo', 'Plus'}:
+                        notas.append(Decimal('2.5'))
+                    else:
+                        notas.append(error.nota)
+                elif error.tipo_error == 'Constitución garantías y/o Aval Insuficientes' and tipo_cliente:
+                    if tipo_cliente in {'Nuevo', 'Prospecto'}:
+                        notas.append(Decimal('2.5'))
+                    elif tipo_cliente in {'Antiguo', 'Plus'}:
+                        notas.append(Decimal('2.5'))
+                    else:
+                        notas.append(error.nota)
+                else:
+                    notas.append(error.nota)
         return notas
 class EvaluacionDepuracionAntecedentes(models.Model):
     id_evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='depuracion_antecedentes')
@@ -440,7 +534,7 @@ class Registro_materialidad(models.Model):
     codigo_suc = models.CharField(max_length=10)
     nombre_suc = models.CharField(max_length=300)
     aprobador = models.CharField(max_length=100)
-    id_oportunidad = models.CharField(max_length=40)
+    id_oportunidad = models.CharField(max_length=45)
 
     def __str__(self):
         return f"{self.id_registro}"
