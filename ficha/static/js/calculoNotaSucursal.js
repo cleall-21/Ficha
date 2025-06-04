@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function cargarResumenSucursales() {
         try {
             const response = await fetch('/detalle-evaluaciones/');
-            if (!response.ok) throw new Error('Error al obtener los detalles');
+            if (!response.ok) throw new Error('Error al obtener el listado');
 
             const detalles = await response.json();
 
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tablaDetalles.appendChild(row);
             });
         } catch (error) {
-            console.error('Error al cargar resumen de sucursales:', error);
+            console.error('Error al cargar listado de sucursales Evaluadas:', error);
             tablaDetalles.innerHTML = `
                 <tr>
                     <td colspan="6" style="text-align: center; color: red;">
@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!codigo || !input) continue;
 
             const nota = parseFloat(input.value);
-            if (isNaN(nota) || nota < 1 || nota > 7) {
-                alert(`Nota inválida para sucursal ${codigo}. Debe estar entre 1.0 y 7.0`);
+            if (isNaN(nota) || nota < 1 || nota > 5) {
+                alert(`Nota inválida para sucursal ${codigo}. Debe estar entre 1.0 y 5.0`);
                 input.focus();
                 return;
             }
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        alert('Resumen actualizado.');
+        alert('Listado de Evaluaciones Actualizado.');
         cargarResumenSucursales();
     });
 

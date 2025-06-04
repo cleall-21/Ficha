@@ -9,12 +9,14 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.http import HttpResponse
 from django.db import IntegrityError
 import pandas as pd
+import json
 from .forms_evaluacion import EvaluacionForm, FormalidadFormSet, GestionOtorgaFormSet, DepuracionAntecedentesFormSet, IngresoDeDatosFormSet
 from .forms import SucursalForm
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 import requests 
+from ficha.tabla_resumen import calculo_tabla, extraer_observaciones
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -159,11 +161,14 @@ def obtener_datos_oportunidad(request, rut):
         except Registro_materialidad.DoesNotExist:
             return JsonResponse({'error': 'Oportunidad no encontrada'}, status=404)
 
+        # Concatenar el RUT con el dígito verificador
+        rut_completo = f"{oportunidad.rut}-{oportunidad.dv}"
+
         data = {
-            'rut_cliente': oportunidad.rut,
+            'rut_cliente': rut_completo,
             'nombre_ejec': oportunidad.nombre_ejecutivo,
             'login_ejecutivo': oportunidad.login_creador,
-            'rut_ejec':oportunidad.rut_ejecutivo,
+            'rut_ejec': oportunidad.rut_ejecutivo,
             'sucursal': oportunidad.nombre_suc,
             'codigo_sucursal': oportunidad.codigo_suc,
             'producto': oportunidad.prod_eval,
@@ -279,17 +284,27 @@ def index(request):
 @login_required
 def listar_evaluaciones(request):
     evaluaciones = Evaluacion.objects.filter(user=request.user)
+
     # Filtros
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
     sucursal = request.GET.get('sucursal')
 
-
+    if fecha_inicio:
+        evaluaciones = evaluaciones.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
+        evaluaciones = evaluaciones.filter(fecha__lte=fecha_fin)
     if sucursal:
-        evaluaciones = evaluaciones.filter(clasificacion__icontains=sucursal)  # Ajusta si tienes un campo específico para sucursal
+        evaluaciones = evaluaciones.filter(codigo_sucursal__icontains=sucursal)
+
+    codigos_validos = list(
+        Evaluacion.objects.filter(user=request.user)
+        .values_list('codigo_sucursal', flat=True)
+        .distinct()
+    )
 
     # Paginación
-    paginator = Paginator(evaluaciones, 5)  # 5 por página
+    paginator = Paginator(evaluaciones, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -297,7 +312,8 @@ def listar_evaluaciones(request):
         'page_obj': page_obj,
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
-        'sucursal': sucursal
+        'sucursal': sucursal,
+        'codigos_validos': json.dumps(codigos_validos),
     })
 
 @login_required
@@ -357,7 +373,55 @@ def delete_evaluacion(request, id_evaluacion):
 
 @login_required
 def listar_ejec(request):
-    return render(request, 'web/listar_ejec.html')
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    sucursal = request.GET.get('sucursal')
+
+    evaluaciones = Evaluacion.objects.filter(user=request.user)
+
+    if fecha_inicio:
+        evaluaciones = evaluaciones.filter(fecha__gte=fecha_inicio)
+    if fecha_fin:
+        evaluaciones = evaluaciones.filter(fecha__lte=fecha_fin)
+    if sucursal:
+        evaluaciones = evaluaciones.filter(codigo_sucursal__icontains=sucursal)
+
+    resumen = calculo_tabla(evaluaciones)
+
+    totales = {
+        'Deficiente': 0,
+        'Insuficiente': 0,
+        'Regular': 0,
+        'Aceptable': 0,
+        'Destacado': 0,
+        'Excelente': 0,
+        'Total_Calificaciones': 0
+    }
+
+    for datos in resumen.values():
+        for clave in totales:
+            totales[clave] += datos.get(clave, 0) # type: ignore
+
+    codigos_validos = list(
+        Evaluacion.objects.filter(user=request.user)
+        .values_list('codigo_sucursal', flat=True)
+        .distinct()
+    )
+
+    # Extraer observaciones relevantes
+    observaciones_relevantes = []
+    for evaluacion in evaluaciones:
+        observaciones_relevantes.extend(extraer_observaciones(evaluacion))
+
+    return render(request, 'web/listar_ejec.html', {
+        'resumen': resumen,
+        'sucursal': sucursal,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'totales': totales,
+        'codigos_validos': json.dumps(codigos_validos),
+        'observaciones': observaciones_relevantes  
+    })
 
 @login_required
 def reporte(request):

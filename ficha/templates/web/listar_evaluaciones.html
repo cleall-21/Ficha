@@ -9,16 +9,17 @@
   <div class="menu">
     <h1>Listado de Evaluaciones</h1>
 
-    <form method="get" class="filtros">
-      <h2>Filtros de Busqueda</h2>
-      <label>Desde: <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}"></label>
-      <label>Hasta: <input type="date" name="fecha_fin" value="{{ fecha_fin }}"></label>
-      <label>Sucursal: <input type="text" name="sucursal" value="{{ sucursal }}"></label>
+    <form method="get" class="filtros" id="form-filtros">
+      <h2>Filtros de Búsqueda</h2>
+      <label>Desde: <input type="date" name="fecha_inicio" id="fecha-inicio" value="{{ fecha_inicio }}"></label>
+      <label>Hasta: <input type="date" name="fecha_fin" id="fecha-fin" value="{{ fecha_fin }}"></label>
+      <label>Sucursal: <input type="text" name="sucursal" id="sucursal" value="{{ sucursal }}"></label>
       <div class="buttons">
         <button type="submit" class="button filtrar">Filtrar</button>
-        <button type="reset" class="button limpiar">Limpiar</button>
+        <button type="button" class="button limpiar" id="btn-limpiar">Limpiar</button>
       </div>
     </form>
+
     <ul>
       {% for evaluacion in page_obj %}
       <li>

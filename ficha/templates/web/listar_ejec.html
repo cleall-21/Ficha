@@ -11,11 +11,18 @@
         <!--Filtro de Sucursal-->
         <div class="filter-section">
                 <h2 class="center-title">Resultados de Evaluación por Ejecutivo</h2>
-            <div class="filter">
-                <label for="sucursal-filter"> Número de Sucursal:</label>
-                <input type="text" id="sucursal-filter" placeholder="N° Sucursal">
-                <button id="filter-button">Filtrar</button>
-            </div>
+           <form method="get" class="filter">
+                <label for="sucursal">Número de Sucursal:</label>
+                <input type="text" name="sucursal" id="sucursal" placeholder="N° Sucursal" value="{{ sucursal|default:'' }}">
+
+                <label for="fecha_inicio">Desde:</label>
+                <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ fecha_inicio|default:'' }}">
+
+                <label for="fecha_fin">Hasta:</label>
+                <input type="date" name="fecha_fin" id="fecha_fin" value="{{ fecha_fin|default:'' }}">
+
+                <button type="submit">Filtrar</button>
+            </form>
         </div>
         <!--Sección tabla de Ejecutivos-->
         <div class="table-section">
@@ -30,68 +37,46 @@
                     <th> Destacado</th>
                     <th> Excelente</th>
                     <th> N° Casos Revisados</th>
-                    <th>Calificación Final</th>
+                    <th> Calificación Final</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-ejecutivo">
-                    <tr dta-sucursal="102">
-                        <td>Zumaran Vera Isabel Ivelina</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>5</td>
-                        <td>Excelente</td>
-                    </tr>
-                    <tr data-sucursal="102">
-                        <td> Ossandon Ortiz David Elías</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>1</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>Excelente</td>
-                    </tr>
-                    <tr data-sucursal="103">
-                        <td> Ramiréz Paredes Blanca Suzy</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>3</td>
-                            <td>2</td>
-                            <td>5</td>
-                            <td>Destacado</td>
-                    </tr>
-                    <tr data-sucursal="103">
-                        <td> Henríquez Bugueño Christian Augusto</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>5</td>
-                            <td>Excelente</td>
-                    </tr>
-                    <tr>
-                        <td><strong> TOTAL</strong></td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>8</td>
-                        <td>12</td>
-                        <td>20</td>
-                        <td>Excelente</td>
-                    </tr>
+                    {% if resumen %}
+                        {% for nombre, datos in resumen.items %}
+                        <tr data-sucursal="{{ sucursal }}">
+                            <td>{{ nombre }}</td>
+                            <td>{{ datos.Deficiente|default:"0" }}</td>
+                            <td>{{ datos.Insuficiente|default:"0" }}</td>
+                            <td>{{ datos.Regular|default:"0" }}</td>
+                            <td>{{ datos.Aceptable|default:"0" }}</td>
+                            <td>{{ datos.Destacado|default:"0" }}</td>
+                            <td>{{ datos.Excelente|default:"0" }}</td>
+                            <td>{{ datos.Total_Calificaciones|default:"0" }}</td>
+                            <td>{{ datos.Calificacion_Final|default:"0" }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="total-row">
+                            <td><strong>Total</strong></td>
+                            <td><strong>{{ totales.Deficiente }}</strong></td>
+                            <td><strong>{{ totales.Insuficiente }}</strong></td>
+                            <td><strong>{{ totales.Regular }}</strong></td>
+                            <td><strong>{{ totales.Aceptable }}</strong></td>
+                            <td><strong>{{ totales.Destacado }}</strong></td>
+                            <td><strong>{{ totales.Excelente }}</strong></td>
+                            <td><strong>{{ totales.Total_Calificaciones }}</strong></td>
+                            <td></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="9">No hay datos disponibles.</td></tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
+        <!--Gráfico de calificaciones-->
+        <section class="chart-section">
+            <h2>Distribución de Calificaciones </h2>
+            <canvas id="pieChart" width="400" height="400"></canvas>
+        </section>
         <!--Filtro ejecutivos-->
         <div class="filter-section">
                 <h2 class="center-title">Detalle de Observaciones Relevantes</h2>
@@ -114,35 +99,29 @@
                         <th> Tipo Evaluación</th>
                     </tr>
                 </thead>
-                <tbody id="observations-body">
-                    <!-- Este cuerpo sera llenado dinámicamente con javascript-->
-                    <tr>
-                        <td>190190405-5 Lin/Cta/</td>
-                        <td>Ingreso de Datos</td>
-                        <td>Profesión</td>
-                        <td>Ejecutiva ingresa como profesión del cliente " Otra Profesión", se debió ingresas "Ing. Ejec. En Administración"</td>
-                        <td>Prospecto</td>
-                        <td>Normal</td>
-                    </tr>
-                    <tr>
-                        <td>190190405-3 Cred/</td>
-                        <td>Ingreso de Datos</td>
-                        <td>Profesión</td>
-                        <td>Ejecutiva ingresa como profesión del Cliente "Otra Profesión", se debió ingresar "Ing.Ejec. En administración"</td>
-                        <td>Plus</td>
-                        <td>3S</td>
-                    </tr>
+               <tbody id="observations-body">
+                    {% if observaciones %}
+                        {% for obs in observaciones %}
+                            <tr>
+                                <td>{{ obs.rut_cliente }} - {{obs.producto}} </td>
+                                <td>{{ obs.item }}</td>
+                                <td>{{ obs.concepto }}</td>
+                                <td>{{ obs.observacion }}</td>
+                                <td>{{ obs.tipo_cliente }}</td>
+                                <td>{{ obs.tipo_evaluacion }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="6">No hay observaciones relevantes disponibles.</td></tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
-        <!--Gráfico de calificaciones-->
-        <section class="chart-section">
-            <h2>Distribución de Calificaciones </h2>
-            <canvas id="pieChart" width="400" height="400"></canvas>
-        </section>
     </div>
+    {{ codigos_validos|json_script:"codigos-validos" }}
     {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="{% static 'js/listarEjec.js'%}"></script>
     {% endblock js %}
 {% endblock contenido %}

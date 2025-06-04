@@ -1,3 +1,4 @@
+from turtle import mode
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
@@ -42,6 +43,7 @@ TIPOS = [
     ('Antiguo','antiguo'),
     ('Plus','plus')
 ]
+#Tabla para guadar los datos generales de la oportunidad revisada por ejecutivo
 class Evaluacion(models.Model):
     id_evaluacion = models.AutoField(primary_key=True)
     # Campos traídos desde Formulario 1
@@ -152,7 +154,7 @@ class Evaluacion(models.Model):
             return "Destacado"
         else:
             return "Excelente"
-
+# Tabla para guardar las notas y clasificacion finales por sucursal evaluada
 class Detalle_evaluaciones(models.Model):
     codigo_sucursal = models.IntegerField(primary_key=True,unique=True)
     nombre_sucursal = models.CharField(max_length=100)
@@ -202,6 +204,7 @@ def actualizar_detalle_evaluaciones(codigo_sucursal, nota_automatica):
     )
     return detalle
 
+# Tablas para guardar las respuestas ingresadas en los formularios de los pilares
 class EvaluacionFormalidad(models.Model):
     id_evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='formalidad')
     # Verificación Laboral
@@ -509,8 +512,9 @@ class EvaluacionIngresoDeDatos(models.Model):
             self.respuesta_estado_civil,
         ]
         return sum(1 for r in respuestas if r == 'Error')
-
+# Tabla para almacenar los datos de las oportunidades a Revisar
 class Registro_materialidad(models.Model):
+
     id_registro = models.AutoField(primary_key=True)
     rut = models.CharField(max_length=12)
     dv = models.CharField(max_length=1)
@@ -538,3 +542,21 @@ class Registro_materialidad(models.Model):
 
     def __str__(self):
         return f"{self.id_registro}"
+
+class Reporte(models.Model):
+    id_reporte = models.AutoField(primary_key=True)
+    nombre_reporte = models.CharField(max_length=100)
+    detalle_sucursal = models.ForeignKey(Detalle_evaluaciones, on_delete=models.CASCADE)
+    fecha_generacion = models.DateTimeField(auto_now_add=True)
+    archivo_pdf = models.FileField(upload_to='informes/')
+
+class GraficoGenerado(models.Model):
+    id_grafico = models.AutoField(primary_key=True)
+    informe = models.ForeignKey(Detalle_evaluaciones, on_delete=models.CASCADE, related_name='graficos')
+    tipo = models.CharField(max_length=50, choices=[
+        ('distribucion_calificaciones', 'Distribución de Calificaciones'),
+        ('cumplimiento_por_pilar', 'Cumplimiento por Pilar'),
+        ('otros', 'Otros')
+    ])
+    imagen = models.ImageField(upload_to='graficos/')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)

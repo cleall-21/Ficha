@@ -45,7 +45,7 @@
                     {% endif %}
                 </div>
                 <div class="botones">
-                    <button type="reset" class="button limpia">Limpiar</button>
+                    <button type="reset" class="button limpia" id="btn-limpiar">Limpiar</button>
                     <button type="submit" class="button buscar">Buscar Oportunidad</button>
                 </div>
             </form>
@@ -67,16 +67,16 @@
                         <a class="nav-link active" id="evaluacion-tab" data-toggle="tab" href="#evaluacion" role="tab" aria-controls="evaluacion" aria-selected="true">Evaluación</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="formalidad-tab" data-toggle="tab" href="#formalidad" role="tab" aria-controls="formalidad" aria-selected="false">Formalidad</a>
+                        <a class="nav-link" id="formalidad-tab" data-toggle="tab" href="#formalidad" role="tab">Formalidad</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="gestion-tab" data-toggle="tab" href="#gestion" role="tab" aria-controls="gestion" aria-selected="false">Gestión Otorgamiento</a>
+                        <a class="nav-link" id="gestion-tab" data-toggle="tab" href="#gestion" role="tab">Gestión Otorgamiento</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="depuracion-tab" data-toggle="tab" href="#depuracion" role="tab" aria-controls="depuracion" aria-selected="false">Depuración Antecedentes</a>
+                        <a class="nav-link" id="depuracion-tab" data-toggle="tab" href="#depuracion" role="tab">Depuración Antecedentes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="ingreso-tab" data-toggle="tab" href="#ingreso" role="tab" aria-controls="ingreso" aria-selected="false">Ingreso de Datos</a>
+                        <a class="nav-link" id="ingreso-tab" data-toggle="tab" href="#ingreso" role="tab">Ingreso de Datos</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -152,7 +152,6 @@
                             </div>
                         {% endfor %}
                     </div>
-
                     <div class="tab-pane fade" id="gestion" role="tabpanel" aria-labelledby="gestion-tab">
                         {{ gestion_otorga_formset.management_form}}
 
@@ -222,8 +221,8 @@
 
                         {% for form in depuracion_antecedentes_formset %}
                             <div class="formset-form">
+                                 <h3>Respuesta Ingresos Mensuales</h3>
                                 <div class="form-group">
-                                    <h3>Respuesta Ingresos Mensuales</h3>
                                     {{ form.respuesta_ingresos_mensuales }}
                                     <div class="tipo-error">
                                         {{ form.tipo_error_ingresos_mensuales }}

@@ -2,48 +2,66 @@
 {% load static %}
 
 {% block estilos %}
-    <link rel="stylesheet" href="{% static 'css/reporte.css' %}">
+<link rel="stylesheet" href="{% static 'css/reporte.css' %}">
 {% endblock estilos %}
 
 {% block contenido %}
-<div class="container">
-    <!-- Datos de la sucursal -->
-    <div class="datos-sucursal">
-        <h2>Reporte sucursal Copiapó</h2>
-        <p><strong>Gerente Área:</strong> Juan Pérez</p>
-        <p><strong>Gerente Zonal:</strong> María González</p>
-        <p><strong>Gerente Sucursal:</strong> Luis Ramírez</p>
-        <p><strong>Tipo de Informe:</strong> Evaluación Trimestral</p>
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="encabezado">
+            <h2>REPORTE REVISIÓN SUCURSAL AHUMADA 40  </h2>
+            <h3>BANCA COMERCIAL BANCO CHILE</h3>
+            <p><strong>Fecha:</strong> 20-04-2023</p>
+        </div>
+
+        <!-- Contenido dividido -->
+        <div class="reporte-container">
+            <!-- Panel izquierdo -->
+            <div class="panel-izquierdo">
+                <h3>Datos Generales</h3>
+                <p><strong>Gerente Área:</strong> Francisco Javier Brancoli Bravo</p>
+                <p><strong>Gerente Zonal:</strong> Marcela Andrea Berrios Urzua</p>
+                <p><strong>Gerente Sucursal:</strong> Adriano Humberto Alonso Ramirez</p>
+                <p><strong>Tipo de Informe:</strong> Eval. Normal/Normal 3S y Rev. Automáticas</p>
+                <p><strong>N° Ejecutivos Evaluados:</strong> 4</p>
+                <p><strong>Periodo de la Muestra:</strong> Febrero y Marzo 2025</p>
+                <p><strong>Cobertura Validación / Documentación:</strong> 32,3% Casos ; 18,5% Montos</p>
+                <p><strong>N° Ejecutivos Evaluados en Revisión Automática:</strong> Toda la Sucursal</p>
+                <p><strong>Cobertura Revisión Automática últimos 6 meses:</strong> 100%</p>
+
+                <div class="badge">Calificación Informe de Validación/Documentación: Regular</div><br>
+                <div class="badge">Calificación Informe de Revisión Automática: Regular</div><br>
+                <div class="badge">Calificación Final: Regular</div>
+            </div>
+
+            <!-- Panel derecho -->
+            <div class="panel-derecho">
+                <h3>Resumen Evaluación</h3>
+                <p>La calidad del Proceso de Otorgamiento de la Muestra revisada en la sucursal es de Nivel <strong>Excelente</strong>, lo cual se fundamenta principalmente por los tipos de errores detectados en la revisión de validación/documentación y resultado obtenido de las revisiones automáticas.</p>
+
+                <h4>A continuación se mencionan los niveles de cumplimiento obtenidos y  aspectos a reforzar:</h4>
+                <ul>
+                    <li><strong>Formalidad:</strong> Con un nivel de cumplimiento del 73%. Se debe presentar Estado de Situación vigente y legible; debe indicar y/o acreditar que se haya verificado que el impuesto de la Liquidación de Sueldo esté correcto y adjuntar documentación completa para evaluar operación vigente y validación de ésta.</li>
+                    <li><strong>Gestión de Otorgamiento:</strong> Con un nivel de cumplimiento del 93%. Índice afectado por errores de atribuciones en evaluación 3S aprobadas en Sucursal, incumplimientos en las condiciones de aprobación indicadas en Comité y deudas vinculadas.</li>
+                    <li><strong>Depuración de Antecedentes:</strong> Con un nivel de cumplimiento del 92%. Se deben reforzar la depuración y registro de ingresos, activos, arriendos y valores a registrar en la personalización de los Créditos Compra Cartera.</li>
+                    <li><strong>Ingreso de Datos:</strong> Con un nivel de cumplimiento del 90%. Se debe mejorar el ingreso de los antecedentes del cliente principalmente en la actividad, dirección particular, fecha de ingreso al empleo, nivel educacional, tipo de contrato y profesión.</li>
+                    <li><strong>Revisiones Automáticas:</strong> En el periodo acumulado de los últimos 6 meses, se registra una incidencia en la revisión automática Ingreso de Datos del 18,7% y para la revisión automática Ejecutivo Evaluador Sin ATC se registra una incidencia del 0%.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Gráfico de Barras -->
+        <section class="chart-section">
+            <h2> RESULTADOS INFORME DE VALIDACIÓN/DOCUMENTACIÓN (% Cumplimiento)</h2>
+            <div class="grafico-container">
+                <canvas id="barChartValidaciones"></canvas>
+            </div>
+        </section>
     </div>
 
-    <!-- Evaluación -->
-    <div class="evaluacion">
-        <h2>Datos de Evaluación</h2>
-        <p><strong>N° Ejecutivos Evaluados en Revisión:</strong> 4 Ejecutivos</p>
-        <p><strong>Periodo de la Muestra Revisión Validador:</strong> Noviembre y Diciembre 2024</p>
-        <p><strong>Cobertura Validación / Documentación:</strong> Casos -20.2% Montos</p>
-        <p><strong>N° Ejecutivos Evaluados en Revisión Automática:</strong> Toda la Sucursal</p>
-        <p><strong>Cobertura de revisión automática últimos 6 meses:</strong> 100% Casos</p>
-    </div>
-
-    <!-- Resultados -->
-    <div class="resultados">
-        <h2>Banca Comercial Banco Chile</h2>
-        <p>La calidad del proceso de Otorgamiento de la muestra revisada en la sucursal es de nivel <strong>Excelente</strong>.</p>
-        <ul>
-            <li><strong>Formalidad:</strong> Cumplimiento total de protocolos.</li>
-            <li><strong>Gestión de Otorgamiento:</strong> Coordinación efectiva entre áreas.</li>
-            <li><strong>Depuración de Antecedentes:</strong> Documentación completa y actualizada.</li>
-            <li><strong>Ingreso de Datos:</strong> Precisión en los registros.</li>
-            <li><strong>Revisiones Automáticas:</strong> Sin observaciones.</li>
-        </ul>
-    </div>
-
-    <!-- Calificaciones -->
-    <div class="calificaciones">
-        <p><strong>Calificación Informe de Validación/Documentación:</strong> Excelente</p>
-        <p><strong>Calificación Informe de Revisión Automática:</strong> Excelente</p>
-        <p><strong>Calificación Final:</strong> Excelente</p>
-    </div>
-</div>
+    {% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="{% static 'js/graficos_reporte.js' %}"></script>
+    {% endblock js %}
 {% endblock contenido %}

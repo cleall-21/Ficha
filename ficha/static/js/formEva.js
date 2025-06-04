@@ -61,6 +61,20 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error:', error);
         });
     }
+    function limpiarFormulario() {
+        form.reset();
+
+        resultados.innerHTML = '';
+        resultados.style.display = 'none';
+
+        ejecutivoSelect.innerHTML = '<option value="">---------</option>';
+        ejecutivoSelect.disabled = true;
+
+        loader.classList.remove('visible');
+        loader.style.display = 'none';
+    }
+    document.getElementById('btn-limpiar').addEventListener('click', limpiarFormulario);
+
 
     function activarPaginacion() {
         document.querySelectorAll('.pagina').forEach(link => {
@@ -122,9 +136,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-// === Lógica dinámica mejorada para campos ===
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Función para mostrar u ocultar campos según la respuesta del select
     function toggleCampoPorRespuesta(select) {
         const value = select.value.trim().toLowerCase();
         const container = select.closest('.form-group');
@@ -140,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Función para mostrar u ocultar campos de compra de cartera
     function toggleCompraCartera(campo) {
         const container = campo.closest('.formset-form');
         const campos = container?.querySelector('.campos-compra-cartera');
@@ -150,15 +162,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const esVerdadero = ['true', '1', 'on'].includes(String(valor).toLowerCase()) || valor === true;
 
         campos.style.display = esVerdadero ? 'block' : 'none';
+
+        // Si no corresponde compra cartera, marcar campos como "N/A"
+        if (!esVerdadero) {
+            campos.querySelectorAll('select').forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = 'N/A';
+                }
+            });
+        }
     }
 
-    // Inicializar selects
     document.querySelectorAll('select').forEach(select => {
         toggleCampoPorRespuesta(select);
         select.addEventListener('change', () => toggleCampoPorRespuesta(select));
     });
 
-    // Inicializar campos de compra de cartera
     document.querySelectorAll('[name$="corresponde_compra_cartera"]').forEach(campo => {
         toggleCompraCartera(campo);
         campo.addEventListener('change', () => toggleCompraCartera(campo));

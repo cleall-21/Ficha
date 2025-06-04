@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Errores_agravante, UserProfile, EvaluacionFormalidad, EvaluacionGestionOtorga, EvaluacionDepuracionAntecedentes,
-    EvaluacionIngresoDeDatos, Evaluacion, Registro_materialidad, Detalle_evaluaciones,
+    EvaluacionIngresoDeDatos, Evaluacion, Registro_materialidad, Detalle_evaluaciones,Reporte,GraficoGenerado
 )
 
 admin.site.site_header = 'Admin Ficha Banco de Chile'
@@ -15,6 +15,8 @@ admin.site.register(EvaluacionGestionOtorga)
 admin.site.register(EvaluacionDepuracionAntecedentes)
 admin.site.register(EvaluacionIngresoDeDatos)
 admin.site.register(Detalle_evaluaciones)
+admin.site.register(Reporte)
+admin.site.register(GraficoGenerado)
 # Admin personalizado para Evaluacion
 @admin.register(Evaluacion)
 class EvaluacionAdmin(admin.ModelAdmin):

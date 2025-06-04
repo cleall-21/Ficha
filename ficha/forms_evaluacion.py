@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import inlineformset_factory
 from .models import Evaluacion,EvaluacionFormalidad,EvaluacionGestionOtorga,EvaluacionDepuracionAntecedentes,EvaluacionIngresoDeDatos
 from .models import Errores_agravante
 from datetime import date
@@ -15,7 +14,7 @@ class EvaluacionForm(forms.ModelForm):
         fields = [
             'rut_cliente', 'nombre_ejec', 'login_ejecutivo', 'rut_ejec','sucursal',
             'codigo_sucursal', 'producto', 'monto_solicitado', 'proceso_credito',
-            'tipo_cliente', 'fecha'
+            'tipo_cliente', 'fecha',
         ]
         widgets = {
             'rut_cliente': forms.TextInput(attrs={'readonly': 'readonly'}),
