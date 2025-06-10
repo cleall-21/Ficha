@@ -16,7 +16,7 @@ from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 import requests 
-from ficha.tabla_resumen import calculo_tabla, extraer_observaciones
+from ficha.tabla_resumen import calculo_tabla, extraer_observaciones, porcentaje_cumplimiento,porcentaje_cumplimiento_por_campo
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -425,7 +425,32 @@ def listar_ejec(request):
 
 @login_required
 def reporte(request):
-    return render(request, 'web/reporte.html')
+    # Obtener filtro desde GET
+    codigo_sucursal = request.GET.get('codigo_sucursal')
+
+    # Filtrar evaluaciones si se especifica código de sucursal
+    evaluaciones = Evaluacion.objects.all()
+    if codigo_sucursal:
+        evaluaciones = evaluaciones.filter(codigo_sucursal=codigo_sucursal)
+
+    # Calcular cumplimiento por pilar (gráfico principal)
+    cumplimiento_por_pilar = porcentaje_cumplimiento(evaluaciones)
+
+    # Calcular cumplimiento por campo (gráficos secundarios)
+    cumplimiento_por_campo = porcentaje_cumplimiento_por_campo(evaluaciones)
+
+    # Obtener lista de códigos de sucursal únicos
+    codigos_sucursal = Evaluacion.objects.values_list('codigo_sucursal', flat=True).distinct()
+
+    # Preparar contexto para la plantilla
+    context = {
+        'datos_cumplimiento': json.dumps(cumplimiento_por_pilar),  # Para gráfico principal
+        'datos_por_campo': json.dumps(cumplimiento_por_campo),     # Para gráficos por campo
+        'codigos_sucursal': codigos_sucursal,
+        'codigo_seleccionado': codigo_sucursal
+    }
+
+    return render(request, 'web/reporte.html', context)
 
 def es_valido(row):
     # Ejemplo de validación: verificar que el RUT no esté vacío

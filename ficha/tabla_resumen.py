@@ -109,22 +109,29 @@ def extraer_observaciones(evaluacion):
                         'tipo_evaluacion': evaluacion.proceso_credito,
                     })
     return observaciones
-def porcentaje_cumplimiento(evaluacion):
-    respuesta = []
+
+def porcentaje_cumplimiento(evaluaciones):
+    respuesta = {
+        'Formalidad': {'sin_error': 0, 'con_error': 0},
+        'Gestión Otorga': {'sin_error': 0, 'con_error': 0},
+        'Depuración Antecedentes': {'sin_error': 0, 'con_error': 0},
+        'Ingreso de Datos': {'sin_error': 0, 'con_error': 0}
+    }
+
     modelos = [
-        ('Formalidad', evaluacion.formalidad.all(), {
+        ('Formalidad', 'formalidad', {
             'respuesta_verificacion_laboral',
             'respuesta_estado_situacion',
-            'respuesta_acreditacion_ingresos'
+            'respuesta_acreditacion_ingresos',
         }),
-        ('Gestión Otorga', evaluacion.gestion_otorga.all(),{
+        ('Gestión Otorga', 'gestion_otorga', {
             'respuesta_atribuciones',
             'respuesta_constitucion_garantia',
             'respuesta_condiciones_aprobacion',
             'respuesta_cambio_evaAT',
             'respuesta_deudas_vinculadas',
         }),
-        ('Depuración Antecedentes', evaluacion.depuracion_antecedentes.all(),{
+        ('Depuración Antecedentes', 'depuracion_antecedentes', {
             'respuesta_ingresos_mensuales',
             'respuesta_activo',
             'respuesta_dividendo_BCH',
@@ -139,7 +146,7 @@ def porcentaje_cumplimiento(evaluacion):
             'respuesta_monto_compra_ooii',
             'respuesta_monto_compra_sbif',
         }),
-        ('Ingreso de Datos', evaluacion.ingreso_datos.all(),{
+        ('Ingreso de Datos', 'ingreso_datos', {
             'respuesta_actividad',
             'respuesta_direccion_part',
             'respuesta_universidad',
@@ -153,3 +160,127 @@ def porcentaje_cumplimiento(evaluacion):
             'respuesta_estado_civil',
         })
     ]
+
+    for evaluacion in evaluaciones:
+        for nombre_pilar, attr, campos in modelos:
+            queryset = getattr(evaluacion, attr).all()
+            for instancia in queryset:
+                for campo in campos:
+                    if hasattr(instancia, campo):
+                        valor = getattr(instancia, campo, '').strip().lower()
+                        if valor == 'error':
+                            respuesta[nombre_pilar]['con_error'] += 1
+                        elif valor == 'sin error':
+                            respuesta[nombre_pilar]['sin_error'] += 1
+                        # 'n/a' no se cuenta en el universo
+
+    resultado = {}
+    for pilar, datos in respuesta.items():
+        total = datos['sin_error'] + datos['con_error']
+        cumplimiento = round((1 - datos['con_error'] / total) * 100) if total > 0 else 0
+        resultado[pilar] = {
+            'Universo Revisado': total,
+            'N° Casos con Error': datos['con_error'],
+            'N° Casos con Sin Error': datos['sin_error'],
+            '% Cumplimiento': cumplimiento
+        }
+
+    return resultado
+
+def porcentaje_cumplimiento_por_campo(evaluaciones):
+    respuesta = {
+        'Formalidad': {},
+        'Gestión Otorgamiento': {},
+        'Depuración Antecedentes': {},
+        'Ingreso de Datos': {}
+    }
+
+    modelos = [
+        ('Formalidad', 'formalidad', {
+            'respuesta_verificacion_laboral',
+            'respuesta_estado_situacion',
+            'respuesta_acreditacion_ingresos',
+        }),
+        ('Gestión Otorgamiento', 'gestion_otorga', {
+            'respuesta_atribuciones',
+            'respuesta_constitucion_garantia',
+            'respuesta_condiciones_aprobacion',
+            'respuesta_cambio_evaAT',
+            'respuesta_deudas_vinculadas',
+        }),
+        ('Depuración Antecedentes', 'depuracion_antecedentes', {
+            'respuesta_ingresos_mensuales',
+            'respuesta_activo',
+            'respuesta_dividendo_BCH',
+            'respuesta_arriendos',
+            'respuesta_cuota_prestamo',
+            'respuesta_renegociado',
+            'respuesta_otros_egre',
+            'respuesta_cuota_cp',
+            'respuesta_cuota_ooii',
+            'respuesta_monto_compra_lp',
+            'respuesta_monto_compra_cp',
+            'respuesta_monto_compra_ooii',
+            'respuesta_monto_compra_sbif',
+        }),
+        ('Ingreso de Datos', 'ingreso_datos', {
+            'respuesta_actividad',
+            'respuesta_direccion_part',
+            'respuesta_universidad',
+            'respuesta_fecha_in_empleo',
+            'respuesta_nivel_educa',
+            'respuesta_nacionalidad',
+            'respuesta_tipo_contrato',
+            'respuesta_tipo_renta',
+            'respuesta_carrera_semestre',
+            'respuesta_profesion',
+            'respuesta_estado_civil',
+        })
+    ]
+
+    campos_compra_cartera = {
+        'respuesta_cuota_cp',
+        'respuesta_cuota_ooii',
+        'respuesta_monto_compra_lp',
+        'respuesta_monto_compra_cp',
+        'respuesta_monto_compra_ooii',
+        'respuesta_monto_compra_sbif'
+    }
+
+    for evaluacion in evaluaciones:
+        for nombre_pilar, attr, campos in modelos:
+            queryset = getattr(evaluacion, attr).all()
+            for instancia in queryset:
+                for campo in campos:
+                    if hasattr(instancia, campo):
+                        valor = getattr(instancia, campo, '').strip().lower()
+                        if campo in campos_compra_cartera:
+                            campo_agrupado = 'respuesta_producto_compra_cartera'
+                        else:
+                            campo_agrupado = campo
+
+                        if campo_agrupado not in respuesta[nombre_pilar]:
+                            respuesta[nombre_pilar][campo_agrupado] = {'sin_error': 0, 'con_error': 0}
+
+                        if valor == 'error':
+                            respuesta[nombre_pilar][campo_agrupado]['con_error'] += 1
+                        elif valor == 'sin error':
+                            respuesta[nombre_pilar][campo_agrupado]['sin_error'] += 1
+
+
+    resultado = {}
+    for pilar, campos in respuesta.items():
+        resultado[pilar] = {}
+        for campo, datos in campos.items():
+            total = datos['sin_error'] + datos['con_error']
+            cumplimiento = round((datos['sin_error'] / total) * 100) if total > 0 else 0
+            error = round((datos['con_error'] / total) * 100) if total > 0 else 0
+            resultado[pilar][campo] = {
+                'Universo Revisado': total,
+                'N° Casos con Error': datos['con_error'],
+                'N° Casos con Sin Error': datos['sin_error'],
+                '% Cumplimiento': cumplimiento,
+                '% Error': error
+            }
+
+    return resultado

@@ -11,7 +11,7 @@
         <div class="encabezado">
             <h2>REPORTE REVISIÓN SUCURSAL AHUMADA 40  </h2>
             <h3>BANCA COMERCIAL BANCO CHILE</h3>
-            <p><strong>Fecha:</strong> 20-04-2023</p>
+            <p><strong>Fecha:</strong> 04-06-2025</p>
         </div>
 
         <!-- Contenido dividido -->
@@ -37,7 +37,7 @@
             <!-- Panel derecho -->
             <div class="panel-derecho">
                 <h3>Resumen Evaluación</h3>
-                <p>La calidad del Proceso de Otorgamiento de la Muestra revisada en la sucursal es de Nivel <strong>Excelente</strong>, lo cual se fundamenta principalmente por los tipos de errores detectados en la revisión de validación/documentación y resultado obtenido de las revisiones automáticas.</p>
+                <p>La calidad del Proceso de Otorgamiento de la Muestra revisada en la sucursal es de Nivel <strong>Regular</strong>, lo cual se fundamenta principalmente por los tipos de errores detectados en la revisión de validación/documentación y resultado obtenido de las revisiones automáticas.</p>
 
                 <h4>A continuación se mencionan los niveles de cumplimiento obtenidos y  aspectos a reforzar:</h4>
                 <ul>
@@ -49,16 +49,29 @@
                 </ul>
             </div>
         </div>
-
-        <!-- Gráfico de Barras -->
+        <form method="get" class="filtro-form">
+            {% csrf_token %}
+            <label for="codigo_sucursal">Filtrar por Código de Sucursal:</label>
+            <select name="codigo_sucursal" id="codigo_sucursal" onchange="this.form.submit()">
+                <option value="">-- Todas --</option>
+                {% for codigo in codigos_sucursal %}
+                    <option value="{{ codigo }}" {% if codigo == codigo_seleccionado %}selected{% endif %}>{{ codigo }}</option>
+                {% endfor %}
+            </select>
+        </form>
         <section class="chart-section">
-            <h2> RESULTADOS INFORME DE VALIDACIÓN/DOCUMENTACIÓN (% Cumplimiento)</h2>
+            <h2>RESULTADOS INFORME DE VALIDACIÓN/DOCUMENTACIÓN (% Cumplimiento)</h2>
             <div class="grafico-container">
                 <canvas id="barChartValidaciones"></canvas>
             </div>
+            <script id="datos-cumplimiento" type="application/json">{{ datos_cumplimiento|safe }}</script>
+        </section>
+        <section class="chart-section">
+            <h2>Validación/Documentación: % Cumplimiento Preguntas Por Ítem (Sucursal)</h2>
+            <div id="graficos-por-campo"></div>
+            <script id="datos-por-campo" type="application/json">{{ datos_por_campo|safe }}</script>
         </section>
     </div>
-
     {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>

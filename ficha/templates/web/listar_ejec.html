@@ -12,6 +12,7 @@
         <div class="filter-section">
                 <h2 class="center-title">Resultados de Evaluación por Ejecutivo</h2>
            <form method="get" class="filter">
+                {% csrf_token %}
                 <label for="sucursal">Número de Sucursal:</label>
                 <input type="text" name="sucursal" id="sucursal" placeholder="N° Sucursal" value="{{ sucursal|default:'' }}">
 
